@@ -28,6 +28,16 @@ h1 {
   width: 512px;
 }
 
+
+#uwc_chatroom {
+  width: 100%;
+  height: 100%;
+}
+
+.hidden {
+  display: none;
+}
+
 /* Autocomplete Style */
 .autocomplete-w1 { background:url(img/shadow.png) no-repeat bottom right; position:absolute; top:0px; left:0px; margin:8px 0 0 6px; /* IE6 fix: */ _background:none; _margin:0; }
 .autocomplete { border:1px solid #999; background:#FFF; cursor:default; text-align:left; max-height:350px; overflow:auto; margin:-6px 6px 6px -6px; /* IE6 specific: */ _height:350px;  _margin:0; _overflow-x:hidden; }
