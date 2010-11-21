@@ -44,7 +44,11 @@ jQuery(function(){
 function submitRoom() {
     var splash = document.getElementById("uwc_splash");
     var chat   = document.getElementById("uwc_chat");
+    var log    = document.getElementById("log");
+    var toolbar = document.getElementById("toolbar");
 
     splash.style.display = "none";
     chat.style.display   = "inline";
+    log.style.display ="inline";
+    toolbar.style.display ="inline";
 }
