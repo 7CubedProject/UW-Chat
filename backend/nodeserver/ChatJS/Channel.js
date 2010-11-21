@@ -1,7 +1,8 @@
 
 ChatJS = exports;
 
-var sys = require("sys");
+var sys = require("sys"),
+    storage = require('../Storage.js');
 
 var MESSAGE_BACKLOG = 200;
 
@@ -40,6 +41,9 @@ ChatJS.Channel.prototype.appendMessage = function (nick, type, text) {
   }
 
   this.messages.push( m );
+
+  // log into mongodb
+  storage.save('messages', m);
 
   while (this.callbacks.length > 0) {
     this.callbacks.shift().callback([m]);
