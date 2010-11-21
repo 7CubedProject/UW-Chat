@@ -469,8 +469,9 @@ $(document).ready(function() {
            , dataType: "json"
            , url: "/join"
            , data: { room: room }
-           , error: function () {
-               alert("error connecting to server");
+           , error: function (request) {
+               var response = eval("(" + request.responseText + ")");
+               alert("error connecting to server: "+response.error);
                showConnect();
              }
            , success: onConnect

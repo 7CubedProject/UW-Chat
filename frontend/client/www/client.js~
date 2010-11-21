@@ -469,8 +469,9 @@ $(document).ready(function() {
            , dataType: "json"
            , url: "/join"
            , data: { room: room }
-           , error: function () {
-               alert("error connecting to server");
+           , error: function (request) {
+               var response = eval("(" + request.responseText + ")");
+               alert("error connecting to server: "+response.error);
                showConnect();
              }
            , success: onConnect
@@ -503,5 +504,5 @@ $(document).ready(function() {
 
 //if we can, notify the server that we're going away.
 $(window).unload(function () {
-  jQuery.get("/part", {nick: CONFIG.nick}, function (data) { }, "json");
+  jQuery.get("/part", {nick: CONFIG.nick room : CONFIG.room}, function (data) { }, "json");
 });

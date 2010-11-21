@@ -84,6 +84,7 @@ var channel = new function () {
 
 // [room_name] => array(sessions)
 var rooms = {};
+var sessions = {};
 
 function joinRoom (roomname, nick) {
   if (roomname.length > 50) return null;
@@ -115,8 +116,6 @@ function joinRoom (roomname, nick) {
 
   return rooms[roomname];
 }
-
-var sessions = {};
 
 function createSession (nick) {
   // TODO: name length
@@ -168,6 +167,9 @@ fu.get("/jquery.js", fu.staticHandler("frontend/client/www/jquery.js"));
 
 
 fu.get("/who", function (req, res) {
+  sys.puts('serv: who');
+  sys.puts(' - req: '+req);
+  sys.puts(' - res: '+res);
   var nicks = [];
   for (var id in sessions) {
     if (!sessions.hasOwnProperty(id)) continue;
@@ -180,6 +182,10 @@ fu.get("/who", function (req, res) {
 });
 
 fu.get("/join", function (req, res) {
+  sys.puts('serv: join');
+  sys.puts(' - req: '+req.url);
+  sys.puts(' - query: '+url.parse(req.url).query);
+  sys.puts(' - res: '+res);
   var nick = qs.parse(url.parse(req.url).query).nick;
   if (nick == null || nick.length == 0) {
     res.simpleJSON(400, {error: "Bad nick."});
@@ -201,6 +207,9 @@ fu.get("/join", function (req, res) {
 });
 
 fu.get("/part", function (req, res) {
+  sys.puts('serv: part');
+  sys.puts(' - req: '+req);
+  sys.puts(' - res: '+res);
   var id = qs.parse(url.parse(req.url).query).nick;
   var session;
   if (id && sessions[id]) {
@@ -211,6 +220,9 @@ fu.get("/part", function (req, res) {
 });
 
 fu.get("/recv", function (req, res) {
+  sys.puts('serv: recv');
+  sys.puts(' - req: '+req);
+  sys.puts(' - res: '+res);
   if (!qs.parse(url.parse(req.url).query).since) {
     res.simpleJSON(400, { error: "Must supply since parameter" });
     return;
@@ -231,6 +243,9 @@ fu.get("/recv", function (req, res) {
 });
 
 fu.get("/send", function (req, res) {
+  sys.puts('serv: send');
+  sys.puts(' - req: '+req);
+  sys.puts(' - res: '+res);
   var id = qs.parse(url.parse(req.url).query).nick;
   var text = qs.parse(url.parse(req.url).query).text;
 
