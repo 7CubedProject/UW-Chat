@@ -47,7 +47,9 @@ function submitRoom() {
     var log    = document.getElementById("log");
     var toolbar = document.getElementById("toolbar");
 
-    splash.style.display = "none";
+    //splash.style.display = "none";
+    $(splash).addClass("top");
+ 
     chat.style.display   = "inline";
     log.style.display ="inline";
     toolbar.style.display ="inline";

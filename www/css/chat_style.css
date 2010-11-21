@@ -7,7 +7,7 @@ body, #entry {
   color: #eee;
 }
 body, table {
-  font-family: DejaVu Sans Mono, fixed; 
+  font-family: Helvetica, fixed; 
   font-size: 14pt;
   line-height: 150%;
 }
@@ -34,14 +34,13 @@ a:hover { text-decoration: underline; color: #aaa; }
   background: #22252a;
   width: 100%;
   height: 100%;
-  padding: 1em;
 }
 
 #loading { z-index: 10000000; }
 #connect { z-index: 10000001; }
 
 #loading p, #connect fieldset  {
-  font-family: DejaVu Sans Mono, fixed; 
+  font-family: Helvetica, fixed; 
   width: 30em;
   border: 0;
 }
@@ -108,10 +107,9 @@ a:hover { text-decoration: underline; color: #aaa; }
 
 #usersLink {
   color: inherit;
+}
 
 // our stuff
-
-}
 
 #uwc_base { border: 1px solid; margin-left: auto;
   margin-right: auto;
@@ -129,7 +127,24 @@ a:hover { text-decoration: underline; color: #aaa; }
   margin-right: auto;
   position: relative;
   vertical-align: middle;
-  top: 50%;
+  top: 30%;
+}
+
+#uwc_splash.top {
+  width: 100%;
+  height: 20px;
+  position: relative;
+  vertical-align: top;
+  top: 0%;
+}
+
+#uwc_splash.top h1 {
+  display: inline;
+}
+
+#uwc_splash.top #connect {
+  width: 90%;
+  float: right;
 }
 
 #uwc_room {
