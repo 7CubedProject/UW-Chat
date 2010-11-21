@@ -26,15 +26,17 @@
 </head>
 <body onload="onLoad()">
   <div id="uwc_base">
-    <div id="uwc_splash" class="hidden">
+    <div id="uwc_splash" class="">
       <!-- TODO: get splash banner from chris -->
       <h1>UWCHAT</h1>
-      <p>
-        Enter room: 
-        <input name= "q" id="uwc_room" type="text" onKeydown="Javascript: if (event.keyCode==13) submitRoom();" />
-      </p>
+      <div id="connect">
+        <p>
+          Enter room: 
+          <input name= "q" id="uwc_room" type="text" onKeydown="Javascript: if (event.keyCode==13) submitRoom();" />
+        </p>
+      </div>
     </div>
-    <div id="uwc_chatroom" >
+    <div id="uwc_chatroom" class="hidden">
       <div id="uwc_chatlog_wrapper"> 
         <table id="uwc_chatlog">
           <tr>
@@ -61,7 +63,7 @@
 <!-- -->
 
     <div id="chat">
-      <div id="loadling"><p>Loading ...</p></div>
+      <div id="loading"><p>Loading ...</p></div>
   
       <div id="log">
     
