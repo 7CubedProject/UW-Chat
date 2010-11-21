@@ -34,11 +34,57 @@ h1 {
 
 #uwc_chatroom {
   width: 100%;
-  height: 90%;
+  height: 400px;
   position: relative;
   top: 10%;
   vertical-align: bottom;
   border: 1px solid green;
+}
+
+#uwc_chatlog_wrapper {
+  width: 100%;
+  height: 300px;
+}
+
+#uwc_chatlog {
+  width: 100%;
+}
+
+table { 
+  border: 1px blue;
+}
+
+#uwc_chatlog td {
+  border: 1px solid;
+}
+
+.uwc_nick {
+  width: 10%;
+}
+
+.uwc_msg {
+  width: 90%;
+}
+
+#uwc_nickinput {
+  width: 10%;
+}
+
+#uwc_chatinput_wrapper {
+  width: 100%;
+  border: 1px white;
+}
+
+#uwc_chatinput {
+  width: 82%;
+}
+
+#uwc_send {
+  widtH: 5%;
+}
+
+.uwc_uname {
+  margin-right: 20px;
 }
 
 .hidden {

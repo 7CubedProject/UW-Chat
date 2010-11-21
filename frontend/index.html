@@ -22,14 +22,27 @@
       <p>Enter room: <input name= "q" id="uwc_room" type="text"/> </p>
     </div>
     <div id="uwc_chatroom" >
-      <div id="uwc_chatlog_wrap">
-        <ul id="uwc_chatlog"></ul>
+      <div id="uwc_chatlog_wrapper"> 
+        <table id="uwc_chatlog">
+          <tr>
+            <td class="uwc_uname">gareth</td> 
+            <td class="uwc_msg">Hello!</td>
+          </tr>
+          <tr>
+            <td class="uwc_uname">john</td> 
+            <td class="uwc_msg">peace</td>
+          </tr>
+          <tr>
+            <td class="uwc_uname">katie</td> 
+            <td class="uwc_msg">Whatevs.</td>
+          </tr>
+        </table>
       </div>
       <div id="uwc_chatinput_wrapper">
-        <input id="uwc_nick" type="text"/>
+        <input id="uwc_nickinput" type="text" value="gareth"/>
         <input id="uwc_chatinput" type="text"/>
+        <input id="uwc_send" type="submit" value="send"/>
       </div>
-      Here's the chatroom!
     </div>
   </div>
 </body>
