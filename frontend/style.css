@@ -1,4 +1,8 @@
 
+body {
+  background-color: #C0C0C0;
+}
+
 #uwc_base {
   border: 1px solid;
   margin-left: auto;
@@ -28,10 +32,13 @@ h1 {
   width: 512px;
 }
 
-
 #uwc_chatroom {
   width: 100%;
-  height: 100%;
+  height: 90%;
+  position: relative;
+  top: 10%;
+  vertical-align: bottom;
+  border: 1px solid green;
 }
 
 .hidden {
