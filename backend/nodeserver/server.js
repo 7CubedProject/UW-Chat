@@ -19,6 +19,11 @@ var fu = require("../../common/fu"),
 var MESSAGE_BACKLOG = 200,
     SESSION_TIMEOUT = 60 * 1000;
 
+// This is a class object.
+// var channel = new channel();
+//
+// We can then call the methods below:
+// channel.query();
 var channel = new function () {
   var messages = [],
       callbacks = [];
@@ -90,7 +95,6 @@ function createSession (nick) {
 
   var session = { 
     nick: nick, 
-    id: Math.floor(Math.random()*99999999999).toString(),
     timestamp: new Date(),
 
     poke: function () {
@@ -99,11 +103,11 @@ function createSession (nick) {
 
     destroy: function () {
       channel.appendMessage(session.nick, "part");
-      delete sessions[session.id];
+      delete sessions[session.nick];
     }
   };
 
-  sessions[session.id] = session;
+  sessions[session.nick] = session;
   return session;
 }
 
@@ -155,15 +159,14 @@ fu.get("/join", function (req, res) {
   //sys.puts("connection: " + nick + "@" + res.connection.remoteAddress);
 
   channel.appendMessage(session.nick, "join");
-  res.simpleJSON(200, { id: session.id
-                      , nick: session.nick
+  res.simpleJSON(200, { nick: session.nick
                       , rss: mem.rss
                       , starttime: starttime
                       });
 });
 
 fu.get("/part", function (req, res) {
-  var id = qs.parse(url.parse(req.url).query).id;
+  var id = qs.parse(url.parse(req.url).query).nick;
   var session;
   if (id && sessions[id]) {
     session = sessions[id];
@@ -177,7 +180,7 @@ fu.get("/recv", function (req, res) {
     res.simpleJSON(400, { error: "Must supply since parameter" });
     return;
   }
-  var id = qs.parse(url.parse(req.url).query).id;
+  var id = qs.parse(url.parse(req.url).query).nick;
   var session;
   if (id && sessions[id]) {
     session = sessions[id];
@@ -193,8 +196,10 @@ fu.get("/recv", function (req, res) {
 });
 
 fu.get("/send", function (req, res) {
-  var id = qs.parse(url.parse(req.url).query).id;
+  var id = qs.parse(url.parse(req.url).query).nick;
   var text = qs.parse(url.parse(req.url).query).text;
+
+  sys.puts(id);
 
   var session = sessions[id];
   if (!session || !text) {

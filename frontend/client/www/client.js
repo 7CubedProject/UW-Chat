@@ -1,6 +1,5 @@
 var CONFIG = { debug: false
              , nick: "#"   // set in onConnect
-             , id: null    // set in onConnect
              , last_message_time: 1
              , focus: true //event listeners bound in onConnect
              , unread: 0 //updated in the message-processing loop
@@ -316,7 +315,7 @@ function longPoll (data) {
          , type: "GET"
          , url: "/recv"
          , dataType: "json"
-         , data: { since: CONFIG.last_message_time, id: CONFIG.id }
+         , data: { since: CONFIG.last_message_time, nick: CONFIG.nick }
          , error: function () {
              addMessage("", "long poll error. trying again...", new Date(), "error");
              transmission_errors += 1;
@@ -340,7 +339,7 @@ function send(msg) {
   if (CONFIG.debug === false) {
     // XXX should be POST
     // XXX should add to messages immediately
-    jQuery.get("/send", {id: CONFIG.id, text: msg}, function (data) { }, "json");
+    jQuery.get("/send", {nick: CONFIG.nick, text: msg}, function (data) { }, "json");
   }
 }
 
@@ -393,7 +392,6 @@ function onConnect (session) {
   }
 
   CONFIG.nick = session.nick;
-  CONFIG.id   = session.id;
   starttime   = new Date(session.starttime);
   rss         = session.rss;
   updateRSS();
@@ -503,5 +501,5 @@ $(document).ready(function() {
 
 //if we can, notify the server that we're going away.
 $(window).unload(function () {
-  jQuery.get("/part", {id: CONFIG.id}, function (data) { }, "json");
+  jQuery.get("/part", {nick: CONFIG.nick}, function (data) { }, "json");
 });
