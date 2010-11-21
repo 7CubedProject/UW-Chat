@@ -1,0 +1,31 @@
+
+#uwc_base {
+  border: 1px solid;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  overflow: hidden;
+  height: 500px;
+  width: 940px;   // facebook standard
+}
+
+#uwc_splash {
+  text-align: center;
+  width: 600px;
+  height: 300px;
+  margin-left: auto;
+  margin-right: auto;
+  position: relative;
+  vertical-align: middle;
+  top: 50%;
+}
+
+h1 {
+
+}
+
+#uwc_room {
+  width: 512px;
+}
+
+
