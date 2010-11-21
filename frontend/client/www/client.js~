@@ -1,6 +1,6 @@
 var CONFIG = { debug: false
              , nick: "#"   // set in onConnect
-	     , room: "#"   // set in onConnect
+	           , room: "#"   // set in onConnect
              , last_message_time: 1
              , focus: true //event listeners bound in onConnect
              , unread: 0 //updated in the message-processing loop
@@ -340,7 +340,7 @@ function send(msg) {
   if (CONFIG.debug === false) {
     // XXX should be POST
     // XXX should add to messages immediately
-    jQuery.get("/send", {nick: CONFIG.nick, room: CONFIG.room text: msg}, function (data) { }, "json");
+    jQuery.get("/send", {nick: CONFIG.nick, room: CONFIG.room, text: msg}, function (data) { }, "json");
   }
 }
 
@@ -398,6 +398,8 @@ function onConnect (session) {
   rss         = session.rss;
   updateRSS();
   updateUptime();
+
+  longPoll();
 
   //update the UI to show the chat
   showChat(CONFIG.nick);
@@ -470,6 +472,7 @@ $(document).ready(function() {
            , url: "/join"
            , data: { room: room }
            , error: function (request) {
+             console.log(request.responseText);
                var response = eval("(" + request.responseText + ")");
                alert("error connecting to server: "+response.error);
                showConnect();
@@ -494,15 +497,10 @@ $(document).ready(function() {
   // remove fixtures
   $("#log table").remove();
 
-  //begin listening for updates right away
-  //interestingly, we don't need to join a room to get its updates
-  //we just don't show the chat stream to the user until we create a session
-  longPoll();
-
   showConnect();
 });
 
 //if we can, notify the server that we're going away.
 $(window).unload(function () {
-  jQuery.get("/part", {nick: CONFIG.nick room : CONFIG.room}, function (data) { }, "json");
+  jQuery.get("/part", {nick: CONFIG.nick, room : CONFIG.room}, function (data) { }, "json");
 });

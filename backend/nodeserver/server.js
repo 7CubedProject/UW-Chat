@@ -239,8 +239,9 @@ fu.get("/who", function (req, res) {
   sys.puts('serv: who');
   sys.puts(' - req: '+req);
   sys.puts(' - res: '+res);
+  var room_name = qs.parse(url.parse(req.url).query).room;
   var nicks = [];
-  for (var id in sessions) {
+  for (var id in rooms[room_name].sessions) {
     if (!sessions.hasOwnProperty(id)) continue;
     var session = sessions[id];
     nicks.push(session.nick);
