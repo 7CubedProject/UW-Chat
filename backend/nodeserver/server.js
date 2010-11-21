@@ -101,10 +101,10 @@ function createSession (nick, room) {
 
 fu.listen(Number(process.env.PORT || PORT), HOST);
 
-fu.get("/", fu.staticHandler("www/index.html"));
-fu.get("/style.css", fu.staticHandler("www/css/style.css"));
-fu.get("/client.js", fu.staticHandler("www/js/client.js"));
-fu.get("/jquery.js", fu.staticHandler("www/jquery.js"));
+fu.get("/", fu.staticHandler("www/sample/index.html"));
+fu.get("/style.css", fu.staticHandler("www/sample/style.css"));
+fu.get("/client.js", fu.staticHandler("www/sample/client.js"));
+fu.get("/jquery.js", fu.staticHandler("www/sample/jquery.js"));
 
 
 fu.get("/who", function (req, res) {
