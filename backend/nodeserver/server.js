@@ -210,13 +210,15 @@ fu.get("/nick", function (req, res) {
     return;
   }
 
+  session.nick = new_nick;
+
   delete sessions[nick];
   sessions[new_nick] = session;
 
   session.poke();
 
   var room = rooms[room_name];
-  room.channel.appendMessage(session.nick, "nick", new_nick);
+  room.channel.appendMessage(nick, "nick", new_nick);
   res.simpleJSON(200, { rss: mem.rss });
 });
 
