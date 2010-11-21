@@ -392,14 +392,14 @@ function onConnect (session) {
     return;
   }
 
-  longPoll();
-
   CONFIG.nick = session.nick;
   CONFIG.room = session.room;
   starttime   = new Date(session.starttime);
   rss         = session.rss;
   updateRSS();
   updateUptime();
+
+  longPoll();
 
   //update the UI to show the chat
   showChat(CONFIG.nick);
