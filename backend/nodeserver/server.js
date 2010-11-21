@@ -19,6 +19,11 @@ var fu = require("../../common/fu"),
 var MESSAGE_BACKLOG = 200,
     SESSION_TIMEOUT = 60 * 1000;
 
+// This is a class object.
+// var channel = new channel();
+//
+// We can then call the methods below:
+// channel.query();
 var channel = new function () {
   var messages = [],
       callbacks = [];
@@ -77,9 +82,44 @@ var channel = new function () {
   }, 3000);
 };
 
+// [room_name] => array(sessions)
+var rooms = {};
+
+function joinRoom (roomname, nick) {
+  if (roomname.length > 50) return null;
+  if (/[^\w_\-^!]/.exec(roomname)) return null;
+  if (nick.length > 50) return null;
+  if (/[^\w_\-^!]/.exec(nick)) return null;
+
+  // Does the room exist?
+  if (!rooms[roomname]) {
+    // No. Create it.
+
+    var room = { 
+      roomname: roomname,
+      channel: channel,
+      sessions: []
+    };
+
+    rooms[roomname] = room;
+  }
+
+  // Is the user already in the room?
+  if (!rooms[roomname].sessions[nick]) {
+    // No, join the room.
+    rooms[roomname].sessions.append(createSession(nick));
+
+  } else {
+    return null;
+  }
+
+  return rooms[roomname];
+}
+
 var sessions = {};
 
 function createSession (nick) {
+  // TODO: name length
   if (nick.length > 50) return null;
   if (/[^\w_\-^!]/.exec(nick)) return null;
 
@@ -90,7 +130,6 @@ function createSession (nick) {
 
   var session = { 
     nick: nick, 
-    id: Math.floor(Math.random()*99999999999).toString(),
     timestamp: new Date(),
 
     poke: function () {
@@ -99,11 +138,11 @@ function createSession (nick) {
 
     destroy: function () {
       channel.appendMessage(session.nick, "part");
-      delete sessions[session.id];
+      delete sessions[session.nick];
     }
   };
 
-  sessions[session.id] = session;
+  sessions[session.nick] = session;
   return session;
 }
 
@@ -122,10 +161,10 @@ setInterval(function () {
 
 fu.listen(Number(process.env.PORT || PORT), HOST);
 
-fu.get("/", fu.staticHandler("index.html"));
-fu.get("/style.css", fu.staticHandler("style.css"));
-fu.get("/client.js", fu.staticHandler("client.js"));
-fu.get("/jquery-1.2.6.min.js", fu.staticHandler("jquery-1.2.6.min.js"));
+fu.get("/", fu.staticHandler("frontend/client/www/index.html"));
+fu.get("/style.css", fu.staticHandler("frontend/client/www/style.css"));
+fu.get("/client.js", fu.staticHandler("frontend/client/www/client.js"));
+fu.get("/jquery.js", fu.staticHandler("frontend/client/www/jquery.js"));
 
 
 fu.get("/who", function (req, res) {
@@ -155,15 +194,14 @@ fu.get("/join", function (req, res) {
   //sys.puts("connection: " + nick + "@" + res.connection.remoteAddress);
 
   channel.appendMessage(session.nick, "join");
-  res.simpleJSON(200, { id: session.id
-                      , nick: session.nick
+  res.simpleJSON(200, { nick: session.nick
                       , rss: mem.rss
                       , starttime: starttime
                       });
 });
 
 fu.get("/part", function (req, res) {
-  var id = qs.parse(url.parse(req.url).query).id;
+  var id = qs.parse(url.parse(req.url).query).nick;
   var session;
   if (id && sessions[id]) {
     session = sessions[id];
@@ -177,7 +215,7 @@ fu.get("/recv", function (req, res) {
     res.simpleJSON(400, { error: "Must supply since parameter" });
     return;
   }
-  var id = qs.parse(url.parse(req.url).query).id;
+  var id = qs.parse(url.parse(req.url).query).nick;
   var session;
   if (id && sessions[id]) {
     session = sessions[id];
@@ -193,8 +231,10 @@ fu.get("/recv", function (req, res) {
 });
 
 fu.get("/send", function (req, res) {
-  var id = qs.parse(url.parse(req.url).query).id;
+  var id = qs.parse(url.parse(req.url).query).nick;
   var text = qs.parse(url.parse(req.url).query).text;
+
+  sys.puts(id);
 
   var session = sessions[id];
   if (!session || !text) {

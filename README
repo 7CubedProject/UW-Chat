@@ -1,1 +1,19 @@
 UWChat
+
+Get Node.js
+===========
+
+Do this somewhere outside of the uwchat repo ideally.
+
+    git clone https://github.com/ry/node.git
+    cd node
+    ./configure
+    make
+    sudo make install
+
+How to start the server
+=======================
+
+
+    node backend/nodeserver/server.js
+
