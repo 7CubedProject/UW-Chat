@@ -8,7 +8,6 @@ function InitRooms() {
 
 function onLoad () {
     InitRooms();
-
 }
 
 jQuery(function(){
@@ -40,17 +39,12 @@ jQuery(function(){
         e.preventDefault();
       });
     });
-
-
 });
 
 function submitRoom() {
-    alert("Submtting");
-
     var splash = document.getElementById("uwc_splash");
     var chat   = document.getElementById("uwc_chat");
 
     splash.style.display = "none";
     chat.style.display   = "inline";
-
 }
