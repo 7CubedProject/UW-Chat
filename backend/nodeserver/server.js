@@ -23,7 +23,6 @@ var SESSION_TIMEOUT = 60 * 1000;
 
 // [room_name] => array(sessions)
 var rooms = {};
-var sessions = {};
 
 function joinRoom (room_name, nick) {
   if (room_name.length > 50) return null;
@@ -46,12 +45,25 @@ function joinRoom (room_name, nick) {
     };
 
     rooms[room_name] = room;
+
+    // interval to kill off old sessions
+    setInterval(function () {
+      var now = new Date();
+      for (var id in this.sessions) {
+        if (!this.sessions.hasOwnProperty(id)) continue;
+        var session = this.sessions[id];
+
+        if (now - session.timestamp > SESSION_TIMEOUT) {
+          session.destroy();
+        }
+      }
+    }.bind(room), 1000);
   }
 
   // Is the user already in the room?
   if (!rooms[room_name].sessions[nick]) {
     // No, join the room.
-    rooms[room_name].sessions[nick] = createSession(nick, rooms[room_name].channel);
+    rooms[room_name].sessions[nick] = createSession(nick, rooms[room_name]);
 
   } else {
     return null;
@@ -60,13 +72,13 @@ function joinRoom (room_name, nick) {
   return rooms[room_name];
 }
 
-function createSession (nick, channel) {
+function createSession (nick, room) {
   // TODO: name length
   if (nick.length > 50) return null;
   if (/[^\w_\-^!]/.exec(nick)) return null;
 
-  for (var i in sessions) {
-    var session = sessions[i];
+  for (var i in room.sessions) {
+    var session = room.sessions[i];
     if (session && session.nick === nick) return null;
   }
 
@@ -79,34 +91,20 @@ function createSession (nick, channel) {
     },
 
     destroy: function () {
-      channel.appendMessage(session.nick, "part");
-      delete sessions[session.nick];
+      room.channel.appendMessage(session.nick, "part");
+      delete room.sessions[session.nick];
     }
   };
 
-  sessions[session.nick] = session;
   return session;
 }
 
-// interval to kill off old sessions
-setInterval(function () {
-  var now = new Date();
-  for (var id in sessions) {
-    if (!sessions.hasOwnProperty(id)) continue;
-    var session = sessions[id];
-
-    if (now - session.timestamp > SESSION_TIMEOUT) {
-      session.destroy();
-    }
-  }
-}, 1000);
-
 fu.listen(Number(process.env.PORT || PORT), HOST);
 
-fu.get("/", fu.staticHandler("www/index.html"));
-fu.get("/style.css", fu.staticHandler("www/css/style.css"));
-fu.get("/client.js", fu.staticHandler("www/js/client.js"));
-fu.get("/jquery.js", fu.staticHandler("www/jquery.js"));
+fu.get("/", fu.staticHandler("www/sample/index.html"));
+fu.get("/style.css", fu.staticHandler("www/sample/style.css"));
+fu.get("/client.js", fu.staticHandler("www/sample/client.js"));
+fu.get("/jquery.js", fu.staticHandler("www/sample/jquery.js"));
 
 
 fu.get("/who", function (req, res) {
@@ -116,8 +114,8 @@ fu.get("/who", function (req, res) {
   var room_name = qs.parse(url.parse(req.url).query).room;
   var nicks = [];
   for (var id in rooms[room_name].sessions) {
-    if (!sessions.hasOwnProperty(id)) continue;
-    var session = sessions[id];
+    if (!rooms[room_name].sessions.hasOwnProperty(id)) continue;
+    var session = rooms[room_name].sessions[id];
     nicks.push(session.nick);
   }
   res.simpleJSON(200, { nicks: nicks
@@ -127,9 +125,7 @@ fu.get("/who", function (req, res) {
 
 fu.get("/join", function (req, res) {
   sys.puts('serv: join');
-  sys.puts(' - req: '+req.url);
   sys.puts(' - query: '+url.parse(req.url).query);
-  sys.puts(' - res: '+res);
   
   // Gets the room name from the URL (a GET request).
   var room_name = qs.parse(url.parse(req.url).query).room;
@@ -158,12 +154,12 @@ fu.get("/join", function (req, res) {
 
 fu.get("/part", function (req, res) {
   sys.puts('serv: part');
-  sys.puts(' - req: '+req);
-  sys.puts(' - res: '+res);
   var id = qs.parse(url.parse(req.url).query).nick;
+  var room_name = qs.parse(url.parse(req.url).query).room;
+  var room = rooms[room_name];
   var session;
-  if (id && sessions[id]) {
-    session = sessions[id];
+  if (id && room.sessions[id]) {
+    session = room.sessions[id];
     session.destroy();
   }
   res.simpleJSON(200, { rss: mem.rss });
@@ -171,17 +167,16 @@ fu.get("/part", function (req, res) {
 
 fu.get("/recv", function (req, res) {
   sys.puts('serv: recv');
-  sys.puts(' - req: '+req);
-  sys.puts(' - res: '+res);
   if (!qs.parse(url.parse(req.url).query).since) {
     res.simpleJSON(400, { error: "Must supply since parameter" });
     return;
   }
   var id = qs.parse(url.parse(req.url).query).nick;
   var room_name = qs.parse(url.parse(req.url).query).room;
+  var room = rooms[room_name];
   var session;
-  if (id && sessions[id]) {
-    session = sessions[id];
+  if (id && room.sessions[id]) {
+    session = room.sessions[id];
     session.poke();
   }
 
@@ -189,24 +184,54 @@ fu.get("/recv", function (req, res) {
 
   sys.puts(room_name);
 
-  var room = rooms[room_name];
   room.channel.query(since, function (messages) {
     if (session) session.poke();
     res.simpleJSON(200, { messages: messages, rss: mem.rss });
   });
 });
 
+fu.get("/nick", function (req, res) {
+  sys.puts('serv: nick');
+  var nick = qs.parse(url.parse(req.url).query).nick;
+  var new_nick = qs.parse(url.parse(req.url).query).new_nick;
+  var room_name = qs.parse(url.parse(req.url).query).room;
+  var room = rooms[room_name];
+
+  sys.puts('old name: '+nick);
+  sys.puts('new name: '+new_nick);
+  
+  if (new_nick.length > 50 || /[^\w_\-^!]/.exec(new_nick)) {
+    res.simpleJSON(400, { error: "Invalid nickname" });
+    return;
+  }
+
+  var session = room.sessions[nick];
+  if (!session || !new_nick) {
+    res.simpleJSON(400, { error: "No such session id" });
+    return;
+  }
+
+  session.nick = new_nick;
+
+  delete room.sessions[nick];
+  room.sessions[new_nick] = session;
+
+  session.poke();
+
+  room.channel.appendMessage(nick, "nick", new_nick);
+  res.simpleJSON(200, { rss: mem.rss });
+});
+
 fu.get("/send", function (req, res) {
   sys.puts('serv: send');
-  sys.puts(' - req: '+req);
-  sys.puts(' - res: '+res);
   var id = qs.parse(url.parse(req.url).query).nick;
   var room_name = qs.parse(url.parse(req.url).query).room;
   var text = qs.parse(url.parse(req.url).query).text;
+  var room = rooms[room_name];
 
   sys.puts(id);
 
-  var session = sessions[id];
+  var session = room.sessions[id];
   if (!session || !text) {
     res.simpleJSON(400, { error: "No such session id" });
     return;
@@ -214,7 +239,6 @@ fu.get("/send", function (req, res) {
 
   session.poke();
 
-  var room = rooms[room_name];
   room.channel.appendMessage(session.nick, "msg", text);
   res.simpleJSON(200, { rss: mem.rss });
 });

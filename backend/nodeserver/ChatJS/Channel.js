@@ -1,8 +1,8 @@
 
 ChatJS = exports;
 
-var sys = require("sys"),
-    storage = require('../Storage.js');
+var sys = require("sys");
+var storage = require('../Storage.js');
 
 var MESSAGE_BACKLOG = 200;
 
