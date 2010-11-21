@@ -503,5 +503,5 @@ $(document).ready(function() {
 
 //if we can, notify the server that we're going away.
 $(window).unload(function () {
-  jQuery.get("/part", {nick: CONFIG.nick room : CONFIG.room}, function (data) { }, "json");
+  jQuery.get("/part", {nick: CONFIG.nick}, function (data) { }, "json");
 });
