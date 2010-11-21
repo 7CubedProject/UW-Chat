@@ -6,7 +6,8 @@ var sys = require("sys"),
 
 var MESSAGE_BACKLOG = 200;
 
-ChatJS.Channel = function () {
+ChatJS.Channel = function (name) {
+  this.name = name;
   this.messages = [];
   this.callbacks = [];
 
@@ -43,6 +44,7 @@ ChatJS.Channel.prototype.appendMessage = function (nick, type, text) {
   this.messages.push( m );
 
   // log into mongodb
+  m.room = this.name;
   storage.save('messages', m);
 
   while (this.callbacks.length > 0) {
