@@ -275,6 +275,7 @@ fu.get("/join", function (req, res) {
 
   room.channel.appendMessage(user_name, "join");
   res.simpleJSON(200, { nick: user_name
+                      , room: room_name
                       , rss: mem.rss
                       , starttime: starttime
                       });
@@ -311,6 +312,8 @@ fu.get("/recv", function (req, res) {
 
   var since = parseInt(qs.parse(url.parse(req.url).query).since, 10);
 
+  sys.puts(room_name);
+
   var room = rooms[room_name];
   room.channel.query(since, function (messages) {
     if (session) session.poke();
@@ -323,6 +326,7 @@ fu.get("/send", function (req, res) {
   sys.puts(' - req: '+req);
   sys.puts(' - res: '+res);
   var id = qs.parse(url.parse(req.url).query).nick;
+  var room_name = qs.parse(url.parse(req.url).query).room;
   var text = qs.parse(url.parse(req.url).query).text;
 
   sys.puts(id);
