@@ -1,6 +1,6 @@
 var CONFIG = { debug: false
-             , nick: "#"   // set in onConnect
-	           , room: "#"   // set in onConnect
+             , nick: ""   // set in onConnect
+	           , room: ""   // set in onConnect
              , last_message_time: 1
              , focus: true //event listeners bound in onConnect
              , unread: 0 //updated in the message-processing loop
@@ -123,6 +123,23 @@ function userJoin(nick, timestamp) {
     if (nicks[i] == nick) return;
   //otherwise, add the user to the list
   nicks.push(nick);
+  //update the UI
+  updateUsersLink();
+}
+
+//handles another person joining chat
+function userChangeNick(old_nick, new_nick, timestamp) {
+  //if we already know about this user, ignore it
+  var idx = nicks.indexOf(old_nick);
+  if (idx >= 0) {
+    nicks.splice(idx,1);
+  }
+  //otherwise, add the user to the list
+  nicks.push(new_nick);
+  CONFIG.nick = new_nick;
+  
+  addMessage(new_nick, old_nick + " changed their nickname to " + new_nick, timestamp, "change_nick");
+
   //update the UI
   updateUsersLink();
 }
@@ -296,6 +313,10 @@ function longPoll (data) {
           userJoin(message.nick, message.timestamp);
           break;
 
+        case "nick":
+          userChangeNick(message.nick, message.text, message.timestamp);
+          break;
+
         case "part":
           userPart(message.nick, message.timestamp);
           break;
@@ -340,7 +361,14 @@ function send(msg) {
   if (CONFIG.debug === false) {
     // XXX should be POST
     // XXX should add to messages immediately
-    jQuery.get("/send", {nick: CONFIG.nick, room: CONFIG.room, text: msg}, function (data) { }, "json");
+    var new_nick_matches = /\/nick ([\w_]+)/.exec(msg);
+    if (new_nick_matches) {
+      var new_nick = new_nick_matches[1];
+      jQuery.get("/nick", {nick: CONFIG.nick, room: CONFIG.room, new_nick: new_nick}, function (data) { }, "json");
+
+    } else {
+      jQuery.get("/send", {nick: CONFIG.nick, room: CONFIG.room, text: msg}, function (data) { }, "json");
+    }
   }
 }
 

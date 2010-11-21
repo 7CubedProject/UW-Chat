@@ -127,9 +127,7 @@ fu.get("/who", function (req, res) {
 
 fu.get("/join", function (req, res) {
   sys.puts('serv: join');
-  sys.puts(' - req: '+req.url);
   sys.puts(' - query: '+url.parse(req.url).query);
-  sys.puts(' - res: '+res);
   
   // Gets the room name from the URL (a GET request).
   var room_name = qs.parse(url.parse(req.url).query).room;
@@ -158,8 +156,6 @@ fu.get("/join", function (req, res) {
 
 fu.get("/part", function (req, res) {
   sys.puts('serv: part');
-  sys.puts(' - req: '+req);
-  sys.puts(' - res: '+res);
   var id = qs.parse(url.parse(req.url).query).nick;
   var session;
   if (id && sessions[id]) {
@@ -171,8 +167,6 @@ fu.get("/part", function (req, res) {
 
 fu.get("/recv", function (req, res) {
   sys.puts('serv: recv');
-  sys.puts(' - req: '+req);
-  sys.puts(' - res: '+res);
   if (!qs.parse(url.parse(req.url).query).since) {
     res.simpleJSON(400, { error: "Must supply since parameter" });
     return;
@@ -196,10 +190,38 @@ fu.get("/recv", function (req, res) {
   });
 });
 
+fu.get("/nick", function (req, res) {
+  sys.puts('serv: nick');
+  var nick = qs.parse(url.parse(req.url).query).nick;
+  var new_nick = qs.parse(url.parse(req.url).query).new_nick;
+  var room_name = qs.parse(url.parse(req.url).query).room;
+
+  sys.puts('old name: '+nick);
+  sys.puts('new name: '+new_nick);
+  
+  if (new_nick.length > 50 || /[^\w_\-^!]/.exec(new_nick)) {
+    res.simpleJSON(400, { error: "Invalid nickname" });
+    return;
+  }
+
+  var session = sessions[nick];
+  if (!session || !new_nick) {
+    res.simpleJSON(400, { error: "No such session id" });
+    return;
+  }
+
+  delete sessions[nick];
+  sessions[new_nick] = session;
+
+  session.poke();
+
+  var room = rooms[room_name];
+  room.channel.appendMessage(session.nick, "nick", new_nick);
+  res.simpleJSON(200, { rss: mem.rss });
+});
+
 fu.get("/send", function (req, res) {
   sys.puts('serv: send');
-  sys.puts(' - req: '+req);
-  sys.puts(' - res: '+res);
   var id = qs.parse(url.parse(req.url).query).nick;
   var room_name = qs.parse(url.parse(req.url).query).room;
   var text = qs.parse(url.parse(req.url).query).text;
