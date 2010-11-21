@@ -1,6 +1,6 @@
 var CONFIG = { debug: false
              , nick: "#"   // set in onConnect
-	     , room: "#"   // set in onConnect
+	           , room: "#"   // set in onConnect
              , last_message_time: 1
              , focus: true //event listeners bound in onConnect
              , unread: 0 //updated in the message-processing loop
