@@ -10,3 +10,5 @@ pids
 logs
 results
 .DS_Store
+
+*~
