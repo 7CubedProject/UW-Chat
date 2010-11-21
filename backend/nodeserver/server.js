@@ -151,44 +151,42 @@ ChatJS.Channel.prototype.query = function (since, callback) {
 var rooms = {};
 var sessions = {};
 
-var channel = new ChatJS.Channel();
-
-function joinRoom (roomname, nick) {
-  if (roomname.length > 50) return null;
-  if (/[^\w_\-^!]/.exec(roomname)) return null;
+function joinRoom (room_name, nick) {
+  if (room_name.length > 50) return null;
+  if (/[^\w_\-^!]/.exec(room_name)) return null;
   if (nick.length > 50) return null;
   if (/[^\w_\-^!]/.exec(nick)) return null;
 
   // Does the room exist?
-  if (typeof rooms[roomname] == 'undefined') {
+  if (typeof rooms[room_name] == 'undefined') {
     // No. Create it.
     
-    sys.puts('Creating a room: '+roomname);
+    sys.puts('Creating a room: '+room_name);
 
     var channel = new ChatJS.Channel();
 
     var room = { 
-      roomname: roomname,
+      room_name: room_name,
       channel: channel,
       sessions: []
     };
 
-    rooms[roomname] = room;
+    rooms[room_name] = room;
   }
 
   // Is the user already in the room?
-  if (!rooms[roomname].sessions[nick]) {
+  if (!rooms[room_name].sessions[nick]) {
     // No, join the room.
-    rooms[roomname].sessions[nick] = createSession(nick);
+    rooms[room_name].sessions[nick] = createSession(nick, rooms[room_name].channel);
 
   } else {
     return null;
   }
 
-  return rooms[roomname];
+  return rooms[room_name];
 }
 
-function createSession (nick) {
+function createSession (nick, channel) {
   // TODO: name length
   if (nick.length > 50) return null;
   if (/[^\w_\-^!]/.exec(nick)) return null;
@@ -304,6 +302,7 @@ fu.get("/recv", function (req, res) {
     return;
   }
   var id = qs.parse(url.parse(req.url).query).nick;
+  var room_name = qs.parse(url.parse(req.url).query).room;
   var session;
   if (id && sessions[id]) {
     session = sessions[id];
@@ -312,7 +311,8 @@ fu.get("/recv", function (req, res) {
 
   var since = parseInt(qs.parse(url.parse(req.url).query).since, 10);
 
-  channel.query(since, function (messages) {
+  var room = rooms[room_name];
+  room.channel.query(since, function (messages) {
     if (session) session.poke();
     res.simpleJSON(200, { messages: messages, rss: mem.rss });
   });
@@ -335,6 +335,7 @@ fu.get("/send", function (req, res) {
 
   session.poke();
 
-  channel.appendMessage(session.nick, "msg", text);
+  var room = rooms[room_name];
+  room.channel.appendMessage(session.nick, "msg", text);
   res.simpleJSON(200, { rss: mem.rss });
 });
