@@ -82,9 +82,44 @@ var channel = new function () {
   }, 3000);
 };
 
+// [room_name] => array(sessions)
+var rooms = {};
+
+function joinRoom (roomname, nick) {
+  if (roomname.length > 50) return null;
+  if (/[^\w_\-^!]/.exec(roomname)) return null;
+  if (nick.length > 50) return null;
+  if (/[^\w_\-^!]/.exec(nick)) return null;
+
+  // Does the room exist?
+  if (!rooms[roomname]) {
+    // No. Create it.
+
+    var room = { 
+      roomname: roomname,
+      channel: channel,
+      sessions: []
+    };
+
+    rooms[roomname] = room;
+  }
+
+  // Is the user already in the room?
+  if (!rooms[roomname].sessions[nick]) {
+    // No, join the room.
+    rooms[roomname].sessions.append(createSession(nick));
+
+  } else {
+    return null;
+  }
+
+  return rooms[roomname];
+}
+
 var sessions = {};
 
 function createSession (nick) {
+  // TODO: name length
   if (nick.length > 50) return null;
   if (/[^\w_\-^!]/.exec(nick)) return null;
 
