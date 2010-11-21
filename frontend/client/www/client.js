@@ -470,6 +470,7 @@ $(document).ready(function() {
            , url: "/join"
            , data: { room: room }
            , error: function (request) {
+             console.log(request.responseText);
                var response = eval("(" + request.responseText + ")");
                alert("error connecting to server: "+response.error);
                showConnect();
