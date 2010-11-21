@@ -1,1 +1,9 @@
 UWChat
+
+Get Node.js
+
+How to start the server
+=======================
+
+node backend/nodeserver/server.js
+
