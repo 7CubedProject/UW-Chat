@@ -392,6 +392,8 @@ function onConnect (session) {
     return;
   }
 
+  longPoll();
+
   CONFIG.nick = session.nick;
   CONFIG.room = session.room;
   starttime   = new Date(session.starttime);
@@ -494,11 +496,6 @@ $(document).ready(function() {
 
   // remove fixtures
   $("#log table").remove();
-
-  //begin listening for updates right away
-  //interestingly, we don't need to join a room to get its updates
-  //we just don't show the chat stream to the user until we create a session
-  longPoll();
 
   showConnect();
 });
