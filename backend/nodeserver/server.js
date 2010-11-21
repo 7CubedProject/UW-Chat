@@ -37,7 +37,7 @@ function joinRoom (room_name, nick) {
     
     sys.puts('Creating a room: '+room_name);
 
-    var channel = new ChatJS.Channel();
+    var channel = new ChatJS.Channel(room_name);
 
     var room = { 
       room_name: room_name,
