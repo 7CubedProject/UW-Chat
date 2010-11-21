@@ -3,7 +3,7 @@ var ac; // The AutoComplete Object
 
 function InitRooms() {
     // TODO(becmacdo): Fill this up in a better way
-    ac.setOptions({ lookup: 'RCH101,MC4020'.split(',') });
+   // ac.setOptions({ lookup: 'RCH101,MC4020'.split(',') });
 }
 
 function onLoad () {
@@ -43,3 +43,7 @@ jQuery(function(){
 
 
 });
+
+function submitRoom() {
+    alert("Submtting");
+}
