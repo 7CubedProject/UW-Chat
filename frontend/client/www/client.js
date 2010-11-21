@@ -340,7 +340,7 @@ function send(msg) {
   if (CONFIG.debug === false) {
     // XXX should be POST
     // XXX should add to messages immediately
-    jQuery.get("/send", {nick: CONFIG.nick, room: CONFIG.room text: msg}, function (data) { }, "json");
+    jQuery.get("/send", {nick: CONFIG.nick, room: CONFIG.room, text: msg}, function (data) { }, "json");
   }
 }
 
@@ -470,6 +470,7 @@ $(document).ready(function() {
            , url: "/join"
            , data: { room: room }
            , error: function (request) {
+             console.log(request.responseText);
                var response = eval("(" + request.responseText + ")");
                alert("error connecting to server: "+response.error);
                showConnect();
@@ -504,5 +505,5 @@ $(document).ready(function() {
 
 //if we can, notify the server that we're going away.
 $(window).unload(function () {
-  jQuery.get("/part", {nick: CONFIG.nick room : CONFIG.room}, function (data) { }, "json");
+  jQuery.get("/part", {nick: CONFIG.nick, room : CONFIG.room}, function (data) { }, "json");
 });

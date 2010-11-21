@@ -19,72 +19,139 @@ var fu = require("../../common/fu"),
 var MESSAGE_BACKLOG = 200,
     SESSION_TIMEOUT = 60 * 1000;
 
-// This is a class object.
-// var channel = new channel();
-//
-// We can then call the methods below:
-// channel.query();
-var channel = new function () {
-  var messages = [],
-      callbacks = [];
+var Breeze = {
+  arrg : function (iterable) {
+    if (!iterable) return [];
+    if (iterable.toArray) return iterable.toArray();
+    var length = iterable.length || 0, results = new Array(length);
+    while (length--) results[length] = iterable[length];
+    return results;
+  }
+};
 
-  this.appendMessage = function (nick, type, text) {
-    var m = { nick: nick
-            , type: type // "msg", "join", "part"
-            , text: text
-            , timestamp: (new Date()).getTime()
-            };
+Breeze.Util = {};
 
-    switch (type) {
-      case "msg":
-        sys.puts("<" + nick + "> " + text);
-        break;
-      case "join":
-        sys.puts(nick + " join");
-        break;
-      case "part":
-        sys.puts(nick + " part");
-        break;
+/**
+ * Create an array filled with the given object.
+ *
+ * @param {number} numberOfItems
+ * @param {Object=} opt_value     Default: 0
+ * @return {Array.<Object>}
+ */
+Breeze.Util.filledArray = function(numberOfItems, opt_value) {
+  opt_value = opt_value || 0;
+  var array = [];
+  for (var ix = 0; ix < numberOfItems; ++ix) {
+    array.push(opt_value);
+  }
+  return array;
+};
+
+/**
+ * Prototype-based Object extensions.
+ */
+Object.extend = function(destination, source) {
+  for (var property in source) {
+    destination[property] = source[property];
+  }
+  return destination;
+};
+
+Object.extend(Function.prototype, {
+  isUndefined: function(object) {
+    return typeof object == "undefined";
+  },
+
+  /**
+   * Set a method invocation's "this" scope.
+   *
+   * Example: When passing a callback.
+   *          callback : myobject.onCallback.bind(myobject)
+   *          This will ensure that within the onCallback method, "this" refers to "myobject".
+   */
+  bind: function() {
+    if (arguments.length < 2 && Object.isUndefined(arguments[0])) return this;
+    var __method = this, args = Breeze.arrg(arguments), object = args.shift();
+    return function() {
+      return __method.apply(object, args.concat(Breeze.arrg(arguments)));
     }
+  }
+});
 
-    messages.push( m );
+var ChatJS = {};
 
-    while (callbacks.length > 0) {
-      callbacks.shift().callback([m]);
-    }
+ChatJS.Channel = function () {
+  this.messages = [];
+  this.callbacks = [];
 
-    while (messages.length > MESSAGE_BACKLOG)
-      messages.shift();
-  };
-
-  this.query = function (since, callback) {
-    var matching = [];
-    for (var i = 0; i < messages.length; i++) {
-      var message = messages[i];
-      if (message.timestamp > since)
-        matching.push(message)
-    }
-
-    if (matching.length != 0) {
-      callback(matching);
-    } else {
-      callbacks.push({ timestamp: new Date(), callback: callback });
-    }
-  };
-
-  // clear old callbacks
-  // they can hang around for at most 30 seconds.
   setInterval(function () {
     var now = new Date();
-    while (callbacks.length > 0 && now - callbacks[0].timestamp > 30*1000) {
-      callbacks.shift().callback([]);
+    while (this.callbacks.length > 0 && now - this.callbacks[0].timestamp > 30*1000) {
+      this.callbacks.shift().callback([]);
     }
-  }, 3000);
+  }.bind(this), 3000);
 };
+
+ChatJS.Channel.prototype.appendMessage = function (nick, type, text) {
+  var m = { type: type // "msg", "join", "part"
+          , text: text
+          , timestamp: (new Date()).getTime()
+          };
+
+  if (nick) {
+    m.nick = nick;
+  }
+
+  switch (type) {
+    case "msg":
+      sys.puts("<" + nick + "> " + text);
+      break;
+    case "join":
+      sys.puts(nick + " join");
+      break;
+    case "part":
+      sys.puts(nick + " part");
+      break;
+  }
+
+  this.messages.push( m );
+
+  while (this.callbacks.length > 0) {
+    this.callbacks.shift().callback([m]);
+  }
+
+  while (this.messages.length > MESSAGE_BACKLOG) {
+    this.messages.shift();
+  }
+};
+
+ChatJS.Channel.prototype.query = function (since, callback) {
+  var matching = [];
+  // Find the messages that have been created after the "since" timestamp.
+  for (var i = 0; i < this.messages.length; i++) {
+    var message = this.messages[i];
+    if (message.timestamp > since) {
+      matching.push(message);
+    }
+  }
+
+  // We now have an array of messages to send off to the callback.
+
+  if (matching.length != 0) {
+    // We have matching messages.
+    callback(matching);
+
+  } else {
+    this.callbacks.push({ timestamp: new Date(), callback: callback });
+  }
+};
+
 
 // [room_name] => array(sessions)
 var rooms = {};
 var sessions = {};
+
+var channel = new ChatJS.Channel();
 
 function joinRoom (roomname, nick) {
   if (roomname.length > 50) return null;
@@ -93,8 +160,12 @@ function joinRoom (roomname, nick) {
   if (/[^\w_\-^!]/.exec(nick)) return null;
 
   // Does the room exist?
-  if (!rooms[roomname]) {
+  if (typeof rooms[roomname] == 'undefined') {
     // No. Create it.
+    
+    sys.puts('Creating a room: '+roomname);
+
+    var channel = new ChatJS.Channel();
 
     var room = { 
       roomname: roomname,
@@ -108,7 +179,7 @@ function joinRoom (roomname, nick) {
   // Is the user already in the room?
   if (!rooms[roomname].sessions[nick]) {
     // No, join the room.
-    rooms[roomname].sessions.append(createSession(nick));
+    rooms[roomname].sessions[nick] = createSession(nick);
 
   } else {
     return null;
@@ -186,21 +257,26 @@ fu.get("/join", function (req, res) {
   sys.puts(' - req: '+req.url);
   sys.puts(' - query: '+url.parse(req.url).query);
   sys.puts(' - res: '+res);
-  var nick = qs.parse(url.parse(req.url).query).nick;
-  if (nick == null || nick.length == 0) {
-    res.simpleJSON(400, {error: "Bad nick."});
-    return;
-  }
-  var session = createSession(nick);
-  if (session == null) {
-    res.simpleJSON(400, {error: "Nick in use"});
+  
+  // Gets the room name from the URL (a GET request).
+  var room_name = qs.parse(url.parse(req.url).query).room;
+  if (room_name == null || room_name.length == 0) {
+    res.simpleJSON(400, {error: "Bad room name."});
     return;
   }
 
-  //sys.puts("connection: " + nick + "@" + res.connection.remoteAddress);
+  // TODO: Something more fun.
+  var user_name = 'anon'+Math.floor(Math.random()*1000000000000);
+  var room = joinRoom(room_name, user_name);
+  if (room == null) {
+    res.simpleJSON(400, {error: "There's already a user with your name in the room."});
+    return;
+  }
 
-  channel.appendMessage(session.nick, "join");
-  res.simpleJSON(200, { nick: session.nick
+  sys.puts("connection: " + room_name + "@" + res.connection.remoteAddress);
+
+  room.channel.appendMessage(user_name, "join");
+  res.simpleJSON(200, { nick: user_name
                       , rss: mem.rss
                       , starttime: starttime
                       });
