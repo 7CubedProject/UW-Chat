@@ -1,4 +1,4 @@
-
+                              
 var ac; // The AutoComplete Object
 
 function InitRooms() {
@@ -42,7 +42,7 @@ jQuery(function(){
 });
 
 function submitRoom() {
-    var splash = document.getElementById("uwc_splash");
+    /*var splash = document.getElementById("uwc_splash");
     var chat   = document.getElementById("uwc_chat");
     var log    = document.getElementById("log");
     var toolbar = document.getElementById("toolbar");
@@ -52,5 +52,24 @@ function submitRoom() {
  
     chat.style.display   = "inline";
     log.style.display ="inline";
-    toolbar.style.display ="inline";
+    toolbar.style.display ="inline";    */
+    
+    var fade_speed = 1000;
+    var slide_speed = 1000;          
+    
+    $("#toolbar").attr("style", "in-line");
+    $("#logo").animate({marginTop:'-140px', marginLeft:'-800px'}, slide_speed, function(){});
+    $("#enter_room").animate({marginTop:'-30px', marginLeft:'-300px'}, slide_speed, function(){});
+    $("#uwc_room_box").animate({marginTop:'-25px', marginLeft:'210px'}, slide_speed, function(){
+        $("#uwc_chat").animate({opacity:"1"},fade_speed,function(){});
+        $("#toolbar").animate({opacity:"1"},fade_speed,function(){});
+        $("#log").animate({opacity:"1"},fade_speed,function(){});
+        
+        
+    
+    
+    
+    });
+    
+    
 }

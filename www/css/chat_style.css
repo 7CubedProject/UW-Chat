@@ -27,7 +27,9 @@ a { text-decoration: none; color: #888; }
 a:hover { text-decoration: underline; color: #aaa; }
 
 #uwc_chat {
-  display:none;
+   position:absolute;
+   
+   opacity:0.0;
 }
 
 #loading, #connect {
@@ -69,6 +71,7 @@ a:hover { text-decoration: underline; color: #aaa; }
   padding-bottom: 5.1em; 
   background: inherit;
   overflow: hidden;
+  opacity:0.0;
 }
 
 /* not very important info */
