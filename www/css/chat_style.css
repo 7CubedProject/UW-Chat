@@ -2,7 +2,7 @@ body {
   padding: 0;
   margin: 0;
 }
-body {
+body, #uwc_splash {
   background: #22252a;
   color: #eee;
 }
@@ -28,7 +28,6 @@ a:hover { text-decoration: underline; color: #aaa; }
 
 #uwc_chat {
    position:absolute;
-   
    opacity:0.0;
 }
 
@@ -41,6 +40,19 @@ a:hover { text-decoration: underline; color: #aaa; }
 #loading { z-index: 10000000; }
 #connect { z-index: 10000001; }
 
+#logo {
+}
+
+#stripes {
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 4;
+  width: 82px;
+  height: 100%;
+  background: transparent url('/images/stripes.png') repeat-y scroll 0 0;
+}
+
 #loading p, #connect fieldset  {
   font-family: Helvetica, fixed; 
   width: 30em;
@@ -52,25 +64,25 @@ a:hover { text-decoration: underline; color: #aaa; }
   color: #fff;
   width: 100%; 
   bottom: 0;
-  background: #733;
+  border-top: 1px solid #3FA9F5;
 }
 
 #entry {
   background-color: #000;
   font-size: inherit;
-  padding: 1em;
+  border: none;
+  padding: 0.2em;
   margin: 0;
-  border-width: 0;
-  outline-width: 0;
   clear: both;
   color: #FFF;
-  width: 80%;
+  width: 100%;
 }
 
 #log {
   display: block;
   /* enough padding to clear the toolbar.. is there a better way to do this? */
-  padding-bottom: 5.1em; 
+  margin-top: 63px;
+  padding-bottom: 28px; 
   background: inherit;
   overflow: hidden;
   opacity:0.0;
@@ -110,12 +122,6 @@ a:hover { text-decoration: underline; color: #aaa; }
   margin: 0 2em 0 0;
 }
 
-#usersLink {
-  color: inherit;
-}
-
-// our stuff
-
 #uwc_base {
   height: 500px;
 }
@@ -123,12 +129,21 @@ a:hover { text-decoration: underline; color: #aaa; }
 #uwc_splash {
   text-align: center;
   width: 600px;
-  height: 300px;
-  margin-left: auto;
-  margin-right: auto;
-  position: relative;
-  vertical-align: middle;
-  top: 30%;
+  margin: 0 auto;
+  margin-top: 200px;
+  z-index: 3;
+}
+
+#uwc_splash .content {
+  padding-top: 30px;
+  padding-bottom: 10px;
+}
+
+#uwc_divider {
+  opacity: 0;
+  width: 100%;
+  height:3px;
+  background-color: #3FA9F5;
 }
 
 #uwc_splash.top {

@@ -20,35 +20,33 @@
   <link href="/chat_style.css" rel="stylesheet" type="text/css">
 
 </head>
-<body onload="onLoad()">
+<body>
+  <div id="stripes"></div>
   <div id="uwc_base">
     <div id="uwc_splash">
-      <!-- TODO: get splash banner from chris -->
-      <div id="logo">UWCHAT</div>
+      <div class="content">
       <div id="connect">
         <p>
             <form action="#">
               <fieldset> 
-                <label for="nick">Enter room:</label>
+                <img id="logo" src="/images/logo.png" style="margin-right: 30px"/>
+                <label for="nick">What room are you in?</label>
                 <input id="nickInput" class="text"type="text" name="nick" value=""  onKeydown="Javascript: if (event.keyCode==13) submitRoom();" />
                 <input id="connectButton" class="button" type="submit" name="" value="Join"/>
               </fieldset>
             </form>
         </p>
       </div>
+      </div>
+      <div id="uwc_divider"></div>
     </div>
 
     <div id="uwc_chat">
       <h2>Room Title</h2>
       <div id="log">
-        <table class="message"><tr><td class="date">20:17</td><td valign="top" class="nick">bougyman</td>
-            <td class="msg-text">test</td>
-        </tr></table>
+        <table class="message"></table>
       </div> <!-- Log -->
       <div id="toolbar">
-        <ul id="status">
-          <li><a id="usersLink" href="#">5 users</a></li>
-        </ul>
         <input tabindex="1" type="text" id="entry"/>
       </div>
     </div> <!-- Chat -->

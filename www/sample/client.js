@@ -111,7 +111,7 @@ Date.fromString = function(str) {
 function updateUsersLink ( ) {
   var t = nicks.length.toString() + " user";
   if (nicks.length != 1) t += "s";
-  $("#usersLink").text(t);
+  //$("#usersLink").text(t);
 }
 
 //handles another person joining chat
@@ -382,7 +382,6 @@ function showConnect () {
 
 //transition the page to the loading screen
 function showLoad () {
-  $("#connect").hide();
   $("#loading").show();
   $("#toolbar").hide();
 }
@@ -392,7 +391,6 @@ function showChat (nick) {
   $("#toolbar").show();
   $("#entry").focus();
 
-  $("#connect").hide();
   $("#loading").hide();
 
   scrollDown();
@@ -471,7 +469,7 @@ $(document).ready(function() {
     $("#entry").attr("value", ""); // clear the entry field.
   });
 
-  $("#usersLink").click(outputUsers);
+  //$("#usersLink").click(outputUsers);
 
   //try joining the chat when the user clicks the connect button
   $("#connectButton").click(function () {

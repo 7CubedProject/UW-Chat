@@ -115,6 +115,8 @@ fu.get("/jquery.autocomplete.js", fu.staticHandler("www/js/jquery.autocomplete.j
 fu.get("/code.js", fu.staticHandler("www/js/code.js"));
 fu.get("/favicon.ico", fu.staticHandler("www/images/favicon.ico"));
 fu.get("/images/shadow.png", fu.staticHandler("www/images/shadow.png"));
+fu.get("/images/logo.png", fu.staticHandler("www/images/logo.png"));
+fu.get("/images/stripes.png", fu.staticHandler("www/images/stripes.png"));
 
 
 fu.get("/who", function (req, res) {
