@@ -348,6 +348,8 @@ function longPoll (data) {
          , data: { since: CONFIG.last_message_time, nick: CONFIG.nick, room: CONFIG.room }
          , error: function () {
              addMessage("", "connection error. trying again...", new Date(), "error");
+              var response = eval("(" + request.responseText + ")");
+              alert("error connecting to server: "+response.error);
              transmission_errors += 1;
              //don't flood the servers on error, wait 10 seconds before retrying
              setTimeout(longPoll, 10*1000);
