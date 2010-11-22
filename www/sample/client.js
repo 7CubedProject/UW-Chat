@@ -18,6 +18,7 @@ http://github.com/jherdman/javascript-relative-time-helpers/
 The MIT License
 
 Copyright (c) 2009 James F. Herdman
+Modifications (c) 2010 Team 7Cubed
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
