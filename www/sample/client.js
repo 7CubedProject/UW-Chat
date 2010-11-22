@@ -346,7 +346,7 @@ function longPoll (data) {
          , url: "/recv"
          , dataType: "json"
          , data: { since: CONFIG.last_message_time, nick: CONFIG.nick, room: CONFIG.room }
-         , error: function () {
+         , error: function (request) {
              addMessage("", "connection error. trying again...", new Date(), "error");
               var response = eval("(" + request.responseText + ")");
               if (response.error == "The server has been rebooted. Please refresh your browser.") {
