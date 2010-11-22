@@ -167,6 +167,12 @@ a:hover { text-decoration: underline; color: #aaa; }
   width: 512px;
 }
 
+#example {
+  font-style: italic;
+  color: Grey;
+  font-size:0.8em;
+  text-align:center;
+}
 
 /* Autocomplete Style */
 .autocomplete-w1 { background:url(images/shadow.png) no-repeat bottom right; position:absolute; top:0px; left:0px; margin:8px 0 0 6px; /* IE6 fix: */ _background:none; _margin:0; }

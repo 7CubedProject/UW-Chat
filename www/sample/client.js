@@ -398,6 +398,7 @@ function showChat (nick) {
   $("#entry").focus();
 
   $("#loading").hide();
+  $("#example").hide();
 
   scrollDown();
 }

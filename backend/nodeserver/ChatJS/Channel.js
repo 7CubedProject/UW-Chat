@@ -46,7 +46,6 @@ ChatJS.Channel.prototype.appendMessage = function (nick, type, text) {
   // log into mongodb
   m.room = this.name;
   storage.save('messages', m);
-
   while (this.callbacks.length > 0) {
     this.callbacks.shift().callback([m]);
   }
