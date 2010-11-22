@@ -349,7 +349,9 @@ function longPoll (data) {
          , error: function () {
              addMessage("", "connection error. trying again...", new Date(), "error");
               var response = eval("(" + request.responseText + ")");
-              alert("error connecting to server: "+response.error);
+              if (response.error == "The server has been rebooted. Please refresh your browser.") {
+                alert("error connecting to server: "+response.error);
+              }
              transmission_errors += 1;
              //don't flood the servers on error, wait 10 seconds before retrying
              setTimeout(longPoll, 10*1000);
