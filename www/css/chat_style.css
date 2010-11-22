@@ -2,7 +2,7 @@ body {
   padding: 0;
   margin: 0;
 }
-body, #entry {
+body {
   background: #22252a;
   color: #eee;
 }
@@ -56,13 +56,15 @@ a:hover { text-decoration: underline; color: #aaa; }
 }
 
 #entry {
-  width: 100%;
+  background-color: #000;
   font-size: inherit;
   padding: 1em;
   margin: 0;
   border-width: 0;
   outline-width: 0;
   clear: both;
+  color: #FFF;
+  width: 80%;
 }
 
 #log {
@@ -114,12 +116,8 @@ a:hover { text-decoration: underline; color: #aaa; }
 
 // our stuff
 
-#uwc_base { border: 1px solid; margin-left: auto;
-  margin-right: auto;
-  position: relative;
-  overflow: hidden;
+#uwc_base {
   height: 500px;
-  width: 940px;   // facebook standard
 }
 
 #uwc_splash {
@@ -161,10 +159,3 @@ a:hover { text-decoration: underline; color: #aaa; }
 .autocomplete .selected { background:#F0F0F0; }
 .autocomplete div { padding:2px 5px; white-space:nowrap; }
 .autocomplete strong { font-weight:normal; color:#3399FF; }
-#uwc_base { border: 1px solid; margin-left: auto;
-  margin-right: auto;
-  position: relative;
-  overflow: hidden;
-  height: 500px;
-  width: 940px;   // facebook standard
-}
