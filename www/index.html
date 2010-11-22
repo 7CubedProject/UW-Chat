@@ -27,8 +27,14 @@
       <h1>UWCHAT</h1>
       <div id="connect">
         <p>
-          Enter room: 
-          <input name= "q" id="uwc_room" type="text" onKeydown="Javascript: if (event.keyCode==13) submitRoom();" />
+          
+            <form action="#">
+              <fieldset> 
+                <label for="nick">Enter room:</label>
+                <input id="nickInput" class="text"type="text" name="nick" value=""  onKeydown="Javascript: if (event.keyCode==13) submitRoom();" />
+                <input id="connectButton" class="button" type="submit" name="" value="Join"/>
+              </fieldset>
+            </form>
         </p>
       </div>
     </div>
