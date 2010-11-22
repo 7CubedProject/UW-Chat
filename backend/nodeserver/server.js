@@ -332,6 +332,12 @@ fu.get("/part", function (req, res) {
   var id = qs.parse(url.parse(req.url).query).nick;
   var room_name = qs.parse(url.parse(req.url).query).room;
   var room = rooms[room_name];
+
+  if (!room) {
+    res.simpleJSON(400, { error: "The server has been rebooted. Please refresh your browser." });
+    return;
+  }
+
   var session;
   if (id && room.sessions[id]) {
     session = room.sessions[id];
@@ -350,6 +356,12 @@ fu.get("/recv", function (req, res) {
   var room_name = qs.parse(url.parse(req.url).query).room;
   var room = rooms[room_name];
   var session;
+
+  if (!room) {
+    res.simpleJSON(400, { error: "The server has been rebooted. Please refresh your browser." });
+    return;
+  }
+
   if (id && room.sessions[id]) {
     session = room.sessions[id];
     session.poke();
@@ -371,6 +383,11 @@ fu.get("/nick", function (req, res) {
   var new_nick = qs.parse(url.parse(req.url).query).new_nick;
   var room_name = qs.parse(url.parse(req.url).query).room;
   var room = rooms[room_name];
+
+  if (!room) {
+    res.simpleJSON(400, { error: "The server has been rebooted. Please refresh your browser." });
+    return;
+  }
 
   sys.puts('old name: '+old_nick);
   sys.puts('new name: '+new_nick);
@@ -403,6 +420,11 @@ fu.get("/send", function (req, res) {
   var room_name = qs.parse(url.parse(req.url).query).room;
   var text = qs.parse(url.parse(req.url).query).text;
   var room = rooms[room_name];
+
+  if (!room) {
+    res.simpleJSON(400, { error: "The server has been rebooted. Please refresh your browser." });
+    return;
+  }
 
   sys.puts(id);
 
