@@ -510,6 +510,7 @@ $(document).ready(function() {
     }
 
     if (inARoom) {
+      $('#log .message').empty();
       jQuery.get("/part", {nick: CONFIG.nick, room : CONFIG.room}, function (data) {
         longPollRequest.abort();
         $.ajax({ cache: false
