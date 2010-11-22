@@ -479,6 +479,8 @@ function trim(str) {
 
 $(document).ready(function() {
 
+  $('#entry').width(($(window).width() - 85)+'px');
+
   //submit new messages when the user hits enter if the message isnt blank
   $("#entry").keypress(function (e) {
     if (e.keyCode != 13 /* Return */) return;

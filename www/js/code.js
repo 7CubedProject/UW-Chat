@@ -18,3 +18,7 @@ function submitRoom() {
     $("#uwc_splash").animate({marginLeft:'0px', marginRight:'0px',marginTop:'0',left:'0px',top:'0px'},slide_speed,function(){});
     $("#connect").animate({marginTop:'-27px'},slide_speed,function(){});
 }
+
+$(window).resize(function() {
+  $('#entry').width(($(window).width() - 85)+'px');
+});
