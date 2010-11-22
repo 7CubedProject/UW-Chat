@@ -7,7 +7,6 @@ function submitRoom() {
     var fade_speed = 1000;
     var slide_speed = 1000;          
     
-    $("#toolbar").attr("style", "in-line");
     $("#logo").animate({marginLeft:'0px'}, slide_speed, function(){
         $("#uwc_chat").animate({opacity:"1"},slide_speed,function(){});
         $("#toolbar").animate({opacity:"1"},slide_speed,function(){});

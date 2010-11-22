@@ -379,14 +379,12 @@ function send(msg) {
 function showConnect () {
   $("#connect").show();
   $("#loading").hide();
-  $("#toolbar").hide();
   $("#nickInput").focus();
 }
 
 //transition the page to the loading screen
 function showLoad () {
   $("#loading").show();
-  $("#toolbar").hide();
 }
 
 //transition the page to the main chat view, putting the cursor in the textfield
