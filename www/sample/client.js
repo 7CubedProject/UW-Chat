@@ -369,7 +369,7 @@ function send(msg) {
   if (CONFIG.debug === false) {
     // XXX should be POST
     // XXX should add to messages immediately
-    var new_nick_matches = /\/nick ([\w_]+)/.exec(msg);
+    var new_nick_matches = /\/nick ([\w_, !]+)/.exec(msg);
     if (new_nick_matches) {
       var new_nick = new_nick_matches[1];
       jQuery.get("/nick", {nick: CONFIG.nick, room: CONFIG.room, new_nick: new_nick}, function (data) { }, "json");

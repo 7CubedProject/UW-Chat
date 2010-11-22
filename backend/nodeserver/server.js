@@ -28,7 +28,7 @@ function joinRoom (room_name, nick) {
   if (room_name.length > 50) return null;
   if (/[^\w_\- ^!]/.exec(room_name)) return null;
   if (nick.length > 50) return null;
-  if (/[^\w_\-^!]/.exec(nick)) return null;
+  if (/[^\w_\-, ^!]/.exec(nick)) return null;
 
   // Does the room exist?
   if (typeof rooms[room_name] == 'undefined') {
@@ -75,7 +75,7 @@ function joinRoom (room_name, nick) {
 function createSession (nick, room) {
   // TODO: name length
   if (nick.length > 50) return null;
-  if (/[^\w_\-^!]/.exec(nick)) return null;
+  if (/[^\w_\-, ^!]/.exec(nick)) return null;
 
   for (var i in room.sessions) {
     var session = room.sessions[i];
@@ -135,6 +135,18 @@ fu.get("/who", function (req, res) {
                       });
 });
 
+function generate_name() {
+  var letters = new Array("a","b","c","d","e","f","g","h","i","j","k","m","n","l","o","p","q","r","s","t","u","v","w","x","y","z");
+  var funny_names = new Array("boobmongerer", "test name", "sample name"); 
+
+  var rand_letter = Math.ceil(Math.random()*100)%letters.length;
+  var rand_number = Math.ceil(Math.random()*100)%100;
+  var rand_title = Math.ceil(Math.random()*1000)%funny_names.length;
+
+  return letters[rand_letter] + rand_number + ", the " + funny_names[rand_title];
+}
+
+
 fu.get("/join", function (req, res) {
   sys.puts('serv: join');
   sys.puts(' - query: '+url.parse(req.url).query);
@@ -148,7 +160,7 @@ fu.get("/join", function (req, res) {
   }
 
   // TODO: Something more fun.
-  var user_name = 'anon'+Math.floor(Math.random()*1000000000000);
+  var user_name = generate_name();
   var room = joinRoom(room_name, user_name);
   if (room == null) {
     res.simpleJSON(400, {error: "There's already a user with your name in the room."});
@@ -213,7 +225,7 @@ fu.get("/nick", function (req, res) {
   sys.puts('old name: '+old_nick);
   sys.puts('new name: '+new_nick);
   
-  if (new_nick.length > 50 || /[^\w_\-^!]/.exec(new_nick)) {
+  if (new_nick.length > 50 || /[^\w_\-, ^!]/.exec(new_nick)) {
     res.simpleJSON(400, { error: "Invalid nickname" });
     return;
   }
