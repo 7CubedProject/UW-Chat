@@ -139,7 +139,9 @@ function userChangeNick(old_nick, new_nick, timestamp) {
   }
   //otherwise, add the user to the list
   nicks.push(new_nick);
-  CONFIG.nick = new_nick;
+  if (CONFIG.nick == old_nick) {
+    CONFIG.nick = new_nick;
+  }
   
   addMessage(new_nick, old_nick + " changed their nickname to " + new_nick, timestamp, "change_nick");
 

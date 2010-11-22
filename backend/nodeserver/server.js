@@ -205,12 +205,12 @@ fu.get("/recv", function (req, res) {
 
 fu.get("/nick", function (req, res) {
   sys.puts('serv: nick');
-  var nick = qs.parse(url.parse(req.url).query).nick;
+  var old_nick = qs.parse(url.parse(req.url).query).nick;
   var new_nick = qs.parse(url.parse(req.url).query).new_nick;
   var room_name = qs.parse(url.parse(req.url).query).room;
   var room = rooms[room_name];
 
-  sys.puts('old name: '+nick);
+  sys.puts('old name: '+old_nick);
   sys.puts('new name: '+new_nick);
   
   if (new_nick.length > 50 || /[^\w_\-^!]/.exec(new_nick)) {
@@ -218,7 +218,7 @@ fu.get("/nick", function (req, res) {
     return;
   }
 
-  var session = room.sessions[nick];
+  var session = room.sessions[old_nick];
   if (!session || !new_nick) {
     res.simpleJSON(400, { error: "No such session id" });
     return;
@@ -226,12 +226,12 @@ fu.get("/nick", function (req, res) {
 
   session.nick = new_nick;
 
-  delete room.sessions[nick];
+  delete room.sessions[old_nick];
   room.sessions[new_nick] = session;
 
   session.poke();
 
-  room.channel.appendMessage(nick, "nick", new_nick);
+  room.channel.appendMessage(old_nick, "nick", new_nick);
   res.simpleJSON(200, { rss: mem.rss });
 });
 
