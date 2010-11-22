@@ -8,6 +8,9 @@ var CONFIG = { debug: false
 
 var nicks = [];
 
+var inARoom = false;
+
+
 //  CUT  ///////////////////////////////////////////////////////////////////
 /* This license and copyright apply to all code until the next "CUT"
 http://github.com/jherdman/javascript-relative-time-helpers/
@@ -274,6 +277,7 @@ function updateUptime () {
 var transmission_errors = 0;
 var first_poll = true;
 
+var longPollRequest = null;
 
 //process updates if we have any, request updates from the server,
 // and call again with response. the last part is like recursion except the call
@@ -335,7 +339,7 @@ function longPoll (data) {
   }
 
   //make another request
-  $.ajax({ cache: false
+  longPollRequest = $.ajax({ cache: false
          , type: "GET"
          , url: "/recv"
          , dataType: "json"
@@ -378,14 +382,12 @@ function send(msg) {
 function showConnect () {
   $("#connect").show();
   $("#loading").hide();
-  $("#toolbar").hide();
   $("#nickInput").focus();
 }
 
 //transition the page to the loading screen
 function showLoad () {
   $("#loading").show();
-  $("#toolbar").hide();
 }
 
 //transition the page to the main chat view, putting the cursor in the textfield
@@ -431,6 +433,8 @@ function onConnect (session) {
 
   longPoll();
 
+  inARoom = true;
+
   //update the UI to show the chat
   showChat(CONFIG.nick);
 
@@ -463,6 +467,13 @@ function who () {
   }, "json");
 }
 
+function trim(str) {
+  var newstr;
+  newstr = str.replace(/^\s*/, "").replace(/\s*$/, ""); 
+  newstr = newstr.replace(/\s{2,}/, " "); 
+  return newstr;
+}
+
 $(document).ready(function() {
 
   //submit new messages when the user hits enter if the message isnt blank
@@ -474,16 +485,21 @@ $(document).ready(function() {
   });
 
   //$("#usersLink").click(outputUsers);
-
+  
   //try joining the chat when the user clicks the connect button
   $("#connectButton").click(function () {
-    //lock the UI while waiting for a response
-    showLoad();
-    var room = $("#nickInput").attr("value");
+    if (!inARoom) {
+      //lock the UI while waiting for a response
+      showLoad();
+    }
+    var room = trim($("#nickInput").attr("value"));
+    if (!room || room.toUpperCase() == CONFIG.room) {
+      return false;
+    }
 
     //dont bother the backend if we fail easy validations
     if (room.length > 50) {
-      alert("Nick too long. 50 character max.");
+      alert("Room name too long. 50 character max.");
       showConnect();
       return false;
     }
@@ -495,20 +511,40 @@ $(document).ready(function() {
       return false;
     }
 
-    //make the actual join request to the server
-    $.ajax({ cache: false
-           , type: "GET" // XXX should be POST
-           , dataType: "json"
-           , url: "/join"
-           , data: { room: room }
-           , error: function (request) {
-             console.log(request.responseText);
-               var response = eval("(" + request.responseText + ")");
-               alert("error connecting to server: "+response.error);
-               showConnect();
-             }
-           , success: onConnect
-           });
+    if (inARoom) {
+      $('#log .message').empty();
+      jQuery.get("/part", {nick: CONFIG.nick, room : CONFIG.room}, function (data) {
+        longPollRequest.abort();
+        $.ajax({ cache: false
+               , type: "GET" // XXX should be POST
+               , dataType: "json"
+               , url: "/join"
+               , data: { room: room }
+               , error: function (request) {
+                 console.log(request.responseText);
+                   var response = eval("(" + request.responseText + ")");
+                   alert("error connecting to server: "+response.error);
+                   showConnect();
+                 }
+               , success: onConnect
+               });
+      }, "json");
+    } else {
+      //make the actual join request to the server
+      $.ajax({ cache: false
+             , type: "GET" // XXX should be POST
+             , dataType: "json"
+             , url: "/join"
+             , data: { room: room }
+             , error: function (request) {
+               console.log(request.responseText);
+                 var response = eval("(" + request.responseText + ")");
+                 alert("error connecting to server: "+response.error);
+                 showConnect();
+               }
+             , success: onConnect
+             });
+    }
     return false;
   });
 
