@@ -117,7 +117,7 @@ function updateUsersLink ( ) {
 //handles another person joining chat
 function userJoin(nick, timestamp) {
   //put it in the stream
-  addMessage(nick, "joined", timestamp, "join");
+  addMessage(nick, "joined "+CONFIG.room, timestamp, "join");
   //if we already know about this user, ignore it
   for (var i = 0; i < nicks.length; i++)
     if (nicks[i] == nick) return;
