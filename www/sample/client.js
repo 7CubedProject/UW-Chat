@@ -419,8 +419,6 @@ function onConnect (session) {
     return;
   }
 
-  inARoom = true;
-
   submitRoom();
 
   CONFIG.nick = session.nick;
@@ -430,7 +428,11 @@ function onConnect (session) {
   updateRSS();
   updateUptime();
 
-  longPoll();
+  if (!inARoom) {
+    longPoll();
+  }
+
+  inARoom = true;
 
   //update the UI to show the chat
   showChat(CONFIG.nick);
