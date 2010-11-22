@@ -406,9 +406,9 @@ function showChat (nick) {
 //we want to show a count of unread messages when the window does not have focus
 function updateTitle(){
   if (CONFIG.unread) {
-    document.title = "(" + CONFIG.unread.toString() + ") node chat";
+    document.title = "(" + CONFIG.unread.toString() + ") uwchat";
   } else {
-    document.title = "node chat";
+    document.title = "uwchat";
   }
 }
 
