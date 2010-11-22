@@ -137,7 +137,7 @@ fu.get("/who", function (req, res) {
 
 function generate_name() {
   var letters = new Array("a","b","c","d","e","f","g","h","i","j","k","m","n","l","o","p","q","r","s","t","u","v","w","x","y","z");
-  var funny_names = new Array("boobmongerer", "test name", "sample name"); 
+  var funny_names = new Array(); 
 
   var rand_letter = Math.ceil(Math.random()*100)%letters.length;
   var rand_number = Math.ceil(Math.random()*100)%100;
