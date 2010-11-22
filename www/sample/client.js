@@ -418,6 +418,8 @@ function onConnect (session) {
     return;
   }
 
+  submitRoom();
+
   CONFIG.nick = session.nick;
   CONFIG.room = session.room;
   starttime   = new Date(session.starttime);
