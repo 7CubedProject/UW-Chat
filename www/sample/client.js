@@ -466,6 +466,13 @@ function who () {
   }, "json");
 }
 
+function trim(str) {
+  var newstr;
+  newstr = str.replace(/^\s*/, "").replace(/\s*$/, ""); 
+  newstr = newstr.replace(/\s{2,}/, " "); 
+  return newstr;
+}
+
 $(document).ready(function() {
 
   //submit new messages when the user hits enter if the message isnt blank
@@ -484,8 +491,8 @@ $(document).ready(function() {
       //lock the UI while waiting for a response
       showLoad();
     }
-    var room = $("#nickInput").attr("value");
-    if (room.toUpperCase() == CONFIG.room) {
+    var room = trim($("#nickInput").attr("value"));
+    if (!room || room.toUpperCase() == CONFIG.room) {
       return false;
     }
 
