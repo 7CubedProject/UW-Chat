@@ -348,13 +348,19 @@ function longPoll (data) {
          , data: { since: CONFIG.last_message_time, nick: CONFIG.nick, room: CONFIG.room }
          , error: function (request) {
              addMessage("", "connection error. trying again...", new Date(), "error");
-              var response = eval("(" + request.responseText + ")");
-              if (response.error == "The server has been rebooted. Please refresh your browser.") {
-                alert("error connecting to server: "+response.error);
+             console.log(request.responseText);
+             var doNothing = false;
+             if (request.responseText) {
+                var response = eval("(" + request.responseText + ")");
+                if (response.error == "The server has been rebooted. Please refresh your browser.") {
+                  doNothing = true;
+                  alert("error connecting to server: "+response.error);
+                }
               }
-             transmission_errors += 1;
-             //don't flood the servers on error, wait 10 seconds before retrying
-             setTimeout(longPoll, 10*1000);
+              if (!doNothing) {
+                transmission_errors += 1;
+                setTimeout(longPoll, transmission_errors*transmission_errors*1000);
+              }
            }
          , success: function (data) {
              transmission_errors = 0;
