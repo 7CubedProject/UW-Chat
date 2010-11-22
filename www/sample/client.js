@@ -329,6 +329,8 @@ function longPoll (data) {
     if (first_poll) {
       first_poll = false;
       who();
+      addMessage("", "type \"/nick <name>\" to change your name", new Date(), "notice");
+
     }
   }
 
