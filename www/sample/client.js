@@ -382,8 +382,19 @@ function send(msg) {
     var new_nick_matches = /\/nick ([\w_, !]+)/.exec(msg);
     if (new_nick_matches) {
       var new_nick = new_nick_matches[1];
-      jQuery.get("/nick", {nick: CONFIG.nick, room: CONFIG.room, new_nick: new_nick}, function (data) { }, "json");
-
+      $.ajax({ type: "GET" // XXX should be POST
+             , dataType: "json"
+             , url: "/nick"
+             , data: { nick: CONFIG.nick
+                     , room: CONFIG.room
+                     , new_nick: new_nick
+                     }
+             , error: function (request) {
+                 console.log('dup nickname');
+                 alert("Nickname already exists.");
+               }
+             , success: function() {}
+             });
     } else {
       jQuery.get("/send", {nick: CONFIG.nick, room: CONFIG.room, text: msg}, function (data) { }, "json");
     }
