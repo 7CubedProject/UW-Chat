@@ -4,7 +4,7 @@ ChatJS = exports;
 var sys = require("sys");
 var storage = require('../Storage.js');
 
-var MESSAGE_BACKLOG = 200;
+var MESSAGE_BACKLOG = 5000;
 
 ChatJS.Channel = function (name) {
   this.name = name;
