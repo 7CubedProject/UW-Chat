@@ -403,6 +403,11 @@ fu.get("/nick", function (req, res) {
     return;
   }
 
+  if ( session[new_nick] ) {
+    res.simpleJSON(400, { error: "Nickname already exists" });
+    return;
+  }
+
   session.nick = new_nick;
 
   delete room.sessions[old_nick];
