@@ -8,6 +8,9 @@ var CONFIG = { debug: false
 
 var nicks = [];
 
+var inARoom = false;
+
+
 //  CUT  ///////////////////////////////////////////////////////////////////
 /* This license and copyright apply to all code until the next "CUT"
 http://github.com/jherdman/javascript-relative-time-helpers/
@@ -418,6 +421,8 @@ function onConnect (session) {
     return;
   }
 
+  inARoom = true;
+
   submitRoom();
 
   CONFIG.nick = session.nick;
@@ -472,16 +477,21 @@ $(document).ready(function() {
   });
 
   //$("#usersLink").click(outputUsers);
-
+  
   //try joining the chat when the user clicks the connect button
   $("#connectButton").click(function () {
-    //lock the UI while waiting for a response
-    showLoad();
+    if (!inARoom) {
+      //lock the UI while waiting for a response
+      showLoad();
+    }
     var room = $("#nickInput").attr("value");
+    if (room.toUpperCase() == CONFIG.room) {
+      return false;
+    }
 
     //dont bother the backend if we fail easy validations
     if (room.length > 50) {
-      alert("Nick too long. 50 character max.");
+      alert("Room name too long. 50 character max.");
       showConnect();
       return false;
     }
@@ -493,20 +503,38 @@ $(document).ready(function() {
       return false;
     }
 
-    //make the actual join request to the server
-    $.ajax({ cache: false
-           , type: "GET" // XXX should be POST
-           , dataType: "json"
-           , url: "/join"
-           , data: { room: room }
-           , error: function (request) {
-             console.log(request.responseText);
-               var response = eval("(" + request.responseText + ")");
-               alert("error connecting to server: "+response.error);
-               showConnect();
-             }
-           , success: onConnect
-           });
+    if (inARoom) {
+      jQuery.get("/part", {nick: CONFIG.nick, room : CONFIG.room}, function (data) {
+        $.ajax({ cache: false
+               , type: "GET" // XXX should be POST
+               , dataType: "json"
+               , url: "/join"
+               , data: { room: room }
+               , error: function (request) {
+                 console.log(request.responseText);
+                   var response = eval("(" + request.responseText + ")");
+                   alert("error connecting to server: "+response.error);
+                   showConnect();
+                 }
+               , success: onConnect
+               });
+      }, "json");
+    } else {
+      //make the actual join request to the server
+      $.ajax({ cache: false
+             , type: "GET" // XXX should be POST
+             , dataType: "json"
+             , url: "/join"
+             , data: { room: room }
+             , error: function (request) {
+               console.log(request.responseText);
+                 var response = eval("(" + request.responseText + ")");
+                 alert("error connecting to server: "+response.error);
+                 showConnect();
+               }
+             , success: onConnect
+             });
+    }
     return false;
   });
 
