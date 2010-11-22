@@ -26,7 +26,7 @@ var rooms = {};
 
 function joinRoom (room_name, nick) {
   if (room_name.length > 50) return null;
-  if (/[^\w_\-^!]/.exec(room_name)) return null;
+  if (/[^\w_\- ^!]/.exec(room_name)) return null;
   if (nick.length > 50) return null;
   if (/[^\w_\-^!]/.exec(nick)) return null;
 
@@ -141,6 +141,7 @@ fu.get("/join", function (req, res) {
   
   // Gets the room name from the URL (a GET request).
   var room_name = qs.parse(url.parse(req.url).query).room;
+  room_name = room_name.toUpperCase();
   if (room_name == null || room_name.length == 0) {
     res.simpleJSON(400, {error: "Bad room name."});
     return;
