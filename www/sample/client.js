@@ -487,7 +487,7 @@ $(document).ready(function() {
     }
 
     //more validations
-    if (/[^\w_\-^!]/.exec(room)) {
+    if (/[^\w_ \-^!]/.exec(room)) {
       alert("Bad character in room. Can only have letters, numbers, and '_', '-', '^', '!'");
       showConnect();
       return false;
