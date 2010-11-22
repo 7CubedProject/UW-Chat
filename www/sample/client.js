@@ -428,9 +428,7 @@ function onConnect (session) {
   updateRSS();
   updateUptime();
 
-  if (!inARoom) {
-    longPoll();
-  }
+  longPoll();
 
   inARoom = true;
 
