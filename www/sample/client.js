@@ -277,6 +277,7 @@ function updateUptime () {
 var transmission_errors = 0;
 var first_poll = true;
 
+var longPollRequest = null;
 
 //process updates if we have any, request updates from the server,
 // and call again with response. the last part is like recursion except the call
@@ -336,7 +337,7 @@ function longPoll (data) {
   }
 
   //make another request
-  $.ajax({ cache: false
+  longPollRequest = $.ajax({ cache: false
          , type: "GET"
          , url: "/recv"
          , dataType: "json"
@@ -510,6 +511,7 @@ $(document).ready(function() {
 
     if (inARoom) {
       jQuery.get("/part", {nick: CONFIG.nick, room : CONFIG.room}, function (data) {
+        longPollRequest.abort();
         $.ajax({ cache: false
                , type: "GET" // XXX should be POST
                , dataType: "json"
