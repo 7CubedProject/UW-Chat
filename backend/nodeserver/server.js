@@ -99,22 +99,16 @@ function createSession (nick, room) {
 
 fu.listen(Number(process.env.PORT || PORT), HOST);
 
-//fu.get("/", fu.staticHandler("www/sample/index.html"));
-//fu.get("/style.css", fu.staticHandler("www/sample/style.css"));
-//fu.get("/client.js", fu.staticHandler("www/sample/client.js"));
-//fu.get("/jquery.js", fu.staticHandler("www/sample/jquery.js"));
-fu.get("/", fu.staticHandler("www/index.html"));
-fu.get("/style.css", fu.staticHandler("www/css/style.css"));
-fu.get("/reset.css", fu.staticHandler("www/css/reset.css"));
-fu.get("/chat_style.css", fu.staticHandler("www/css/chat_style.css"));
-fu.get("/client.js", fu.staticHandler("www/sample/client.js"));
-fu.get("/jquery.js", fu.staticHandler("www/sample/jquery.js"));
-fu.get("/jquery.autocomplete.js", fu.staticHandler("www/js/jquery.autocomplete.js"));
-fu.get("/code.js", fu.staticHandler("www/js/code.js"));
-fu.get("/favicon.ico", fu.staticHandler("www/images/favicon.ico"));
-fu.get("/images/shadow.png", fu.staticHandler("www/images/shadow.png"));
-fu.get("/images/logo.png", fu.staticHandler("www/images/logo.png"));
-fu.get("/images/stripes.png", fu.staticHandler("www/images/stripes.png"));
+fu.get("/", fu.staticHandler("frontend/index.html"));
+fu.get("/reset.css", fu.staticHandler("frontend/css/reset.css"));
+fu.get("/chat_style.css", fu.staticHandler("frontend/css/chat_style.css"));
+fu.get("/chat_client.js", fu.staticHandler("frontend/js/chat_client.js"));
+fu.get("/jquery.js", fu.staticHandler("frontend/js/jquery.js"));
+fu.get("/animation.js", fu.staticHandler("frontend/js/animation.js"));
+fu.get("/favicon.ico", fu.staticHandler("frontend/images/favicon.ico"));
+fu.get("/images/shadow.png", fu.staticHandler("frontend/images/shadow.png"));
+fu.get("/images/logo.png", fu.staticHandler("frontend/images/logo.png"));
+fu.get("/images/stripes.png", fu.staticHandler("frontend/images/stripes.png"));
 
 
 fu.get("/who", function (req, res) {

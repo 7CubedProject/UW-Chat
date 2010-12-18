@@ -2,12 +2,12 @@ body {
   padding: 0;
   margin: 0;
 }
-body, #entry {
+body, #uwc_splash {
   background: #22252a;
   color: #eee;
 }
 body, table {
-  font-family: DejaVu Sans Mono, fixed; 
+  font-family: Helvetica, fixed; 
   font-size: 14pt;
   line-height: 150%;
 }
@@ -26,21 +26,35 @@ table {
 a { text-decoration: none; color: #888; }
 a:hover { text-decoration: underline; color: #aaa; }
 
+#uwc_chat {
+   position:absolute;
+   opacity:0.0;
+}
+
 #loading, #connect {
   background: #22252a;
-  position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
   height: 100%;
-  padding: 1em;
 }
 
 #loading { z-index: 10000000; }
 #connect { z-index: 10000001; }
 
+#logo {
+}
+
+#stripes {
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: 4;
+  width: 82px;
+  height: 100%;
+  background: transparent url('/images/stripes.png') repeat-y scroll 0 0;
+}
+
 #loading p, #connect fieldset  {
-  font-family: DejaVu Sans Mono, fixed; 
+  font-family: Helvetica, fixed; 
   width: 30em;
   border: 0;
 }
@@ -50,25 +64,28 @@ a:hover { text-decoration: underline; color: #aaa; }
   color: #fff;
   width: 100%; 
   bottom: 0;
-  background: #733;
+  border-top: 1px solid #3FA9F5;
 }
 
 #entry {
-  width: 100%;
+  background-color: #000;
   font-size: inherit;
-  padding: 1em;
+  border: none;
+  padding: 0.2em;
   margin: 0;
-  border-width: 0;
-  outline-width: 0;
   clear: both;
+  color: #FFF;
+  width: 100%;
 }
 
 #log {
   display: block;
   /* enough padding to clear the toolbar.. is there a better way to do this? */
-  padding-bottom: 5.1em; 
+  margin-top: 63px;
+  padding-bottom: 28px; 
   background: inherit;
   overflow: hidden;
+  opacity:0.0;
 }
 
 /* not very important info */
@@ -105,6 +122,54 @@ a:hover { text-decoration: underline; color: #aaa; }
   margin: 0 2em 0 0;
 }
 
-#usersLink {
-  color: inherit;
+#uwc_base {
+  height: 500px;
+}
+
+#uwc_splash {
+  text-align: center;
+  width: 600px;
+  margin: 0 auto;
+  margin-top: 200px;
+  z-index: 3;
+}
+
+#uwc_splash .content {
+  padding-top: 30px;
+  padding-bottom: 10px;
+}
+
+#uwc_divider {
+  opacity: 0;
+  width: 100%;
+  height:3px;
+  background-color: #3FA9F5;
+}
+
+#uwc_splash.top {
+  width: 100%;
+  height: 20px;
+  position: relative;
+  vertical-align: top;
+  top: 0%;
+}
+
+#uwc_splash.top h1 {
+  display: inline;
+}
+
+#uwc_splash.top #connect {
+  width: 90%;
+  float: right;
+}
+
+#uwc_room {
+  width: 512px;
+}
+
+#example {
+  font-style: italic;
+  color: Grey;
+  font-size:0.8em;
+  text-align:center;
 }
