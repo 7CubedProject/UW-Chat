@@ -97,36 +97,7 @@ function createSession (nick, room) {
   return session;
 }
 
-fu.listen(Number(process.env.PORT || PORT), HOST);
-
-fu.get("/", fu.staticHandler("frontend/index.html"));
-fu.get("/reset.css", fu.staticHandler("frontend/css/reset.css"));
-fu.get("/chat_style.css", fu.staticHandler("frontend/css/chat_style.css"));
-fu.get("/chat_client.js", fu.staticHandler("frontend/js/chat_client.js"));
-fu.get("/jquery.js", fu.staticHandler("frontend/js/jquery.js"));
-fu.get("/animation.js", fu.staticHandler("frontend/js/animation.js"));
-fu.get("/favicon.ico", fu.staticHandler("frontend/images/favicon.ico"));
-fu.get("/images/shadow.png", fu.staticHandler("frontend/images/shadow.png"));
-fu.get("/images/logo.png", fu.staticHandler("frontend/images/logo.png"));
-fu.get("/images/stripes.png", fu.staticHandler("frontend/images/stripes.png"));
-
-
-fu.get("/who", function (req, res) {
-  sys.puts('serv: who');
-  sys.puts(' - req: '+req);
-  sys.puts(' - res: '+res);
-  var room_name = qs.parse(url.parse(req.url).query).room;
-  var nicks = [];
-  for (var id in rooms[room_name].sessions) {
-    if (!rooms[room_name].sessions.hasOwnProperty(id)) continue;
-    var session = rooms[room_name].sessions[id];
-    nicks.push(session.nick);
-  }
-  res.simpleJSON(200, { nicks: nicks
-                      , rss: mem.rss
-                      });
-});
-
+// function to generate random user names
 function generate_name() {
   var letters = new Array("a","b","c","d","e","f","g","h","i","j","k","m","n","l","o","p","q","r","s","t","u","v","w","x","y","z");
   var funny_names = new Array(
@@ -289,6 +260,41 @@ function generate_name() {
 }
 
 
+// define paths and corresponding handlers
+fu.listen(Number(process.env.PORT || PORT), HOST);
+
+fu.get("/", fu.staticHandler("frontend/index.html"));
+
+fu.get("/reset.css", fu.staticHandler("frontend/css/reset.css"));
+fu.get("/chat_style.css", fu.staticHandler("frontend/css/chat_style.css"));
+
+fu.get("/chat_client.js", fu.staticHandler("frontend/js/chat_client.js"));
+fu.get("/jquery.js", fu.staticHandler("frontend/js/jquery.js"));
+fu.get("/animation.js", fu.staticHandler("frontend/js/animation.js"));
+
+fu.get("/favicon.ico", fu.staticHandler("frontend/images/favicon.ico"));
+fu.get("/images/shadow.png", fu.staticHandler("frontend/images/shadow.png"));
+fu.get("/images/logo.png", fu.staticHandler("frontend/images/logo.png"));
+fu.get("/images/stripes.png", fu.staticHandler("frontend/images/stripes.png"));
+
+fu.get("/who", function (req, res) {
+  sys.puts('serv: who');
+  sys.puts(' - req: '+req);
+  sys.puts(' - res: '+res);
+  var room_name = qs.parse(url.parse(req.url).query).room;
+  var nicks = [];
+  for (var id in rooms[room_name].sessions) {
+    if (!rooms[room_name].sessions.hasOwnProperty(id)) continue;
+    var session = rooms[room_name].sessions[id];
+    nicks.push(session.nick);
+  }
+  res.simpleJSON(200, { nicks: nicks
+                      , rss: mem.rss
+                      });
+});
+
+
+
 fu.get("/join", function (req, res) {
   sys.puts('serv: join');
   sys.puts(' - query: '+url.parse(req.url).query);
@@ -435,3 +441,4 @@ fu.get("/send", function (req, res) {
   room.channel.appendMessage(session.nick, "msg", text);
   res.simpleJSON(200, { rss: mem.rss });
 });
+
