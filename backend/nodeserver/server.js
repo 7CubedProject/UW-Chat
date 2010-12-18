@@ -11,9 +11,8 @@ setInterval(function () {
 }, 10*1000);
 
 
-var fu = require("../../common/fu"),
-    Breeze = require("./Breeze/Breeze"),
-    ChatJS = require("./ChatJS/Channel"),
+var fu = require("./fu"),
+    ch = require("./Channel"),
     sys = require("sys"),
     url = require("url"),
     qs = require("querystring");
@@ -36,7 +35,7 @@ function joinRoom (room_name, nick) {
     
     sys.puts('Creating a room: '+room_name);
 
-    var channel = new ChatJS.Channel(room_name);
+    var channel = new ch.Channel(room_name);
 
     var room = { 
       room_name: room_name,
@@ -73,7 +72,6 @@ function joinRoom (room_name, nick) {
 }
 
 function createSession (nick, room) {
-  // TODO: name length
   if (nick.length > 50) return null;
   if (/[^\w_\-, ^!]/.exec(nick)) return null;
 
@@ -309,7 +307,6 @@ fu.get("/join", function (req, res) {
     return;
   }
 
-  // TODO: Something more fun.
   var user_name = generate_name();
   var room = joinRoom(room_name, user_name);
   if (room == null) {

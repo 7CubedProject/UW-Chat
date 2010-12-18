@@ -1,12 +1,9 @@
-
-ChatJS = exports;
-
 var sys = require("sys");
-var storage = require('../Storage.js');
+var storage = require('./Storage.js');
 
 var MESSAGE_BACKLOG = 5000;
 
-ChatJS.Channel = function (name) {
+exports.Channel = function (name) {
   this.name = name;
   this.messages = [];
   this.callbacks = [];
@@ -19,7 +16,7 @@ ChatJS.Channel = function (name) {
   }.bind(this), 3000);
 };
 
-ChatJS.Channel.prototype.appendMessage = function (nick, type, text) {
+exports.Channel.prototype.appendMessage = function (nick, type, text) {
   var m = { type: type // "msg", "join", "part"
           , text: text
           , timestamp: (new Date()).getTime()
@@ -55,7 +52,7 @@ ChatJS.Channel.prototype.appendMessage = function (nick, type, text) {
   }
 };
 
-ChatJS.Channel.prototype.query = function (since, callback) {
+exports.Channel.prototype.query = function (since, callback) {
   var matching = [];
   // Find the messages that have been created after the "since" timestamp.
   for (var i = 0; i < this.messages.length; i++) {
