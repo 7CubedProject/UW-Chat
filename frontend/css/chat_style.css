@@ -228,11 +228,16 @@ a:hover { text-decoration: underline; color: #aaa; }
 	margin-bottom: 10px;
 }
 
-.room_name{
+#activerooms_splash .no_active_rooms{
+	color: grey;
+    font-size: 0.7em;
+}
+
+#activerooms_splash .room_name{
 	float: left;
 	font-size: 0.8em;
 }
 
-.join_button_div {
+#activerooms_splash .join_button_div {
 	float: right;
 }

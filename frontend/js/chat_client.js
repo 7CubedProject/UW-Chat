@@ -281,6 +281,10 @@ function updateActiveRooms (data) {
         room,
         content = '';
     
+    if (data.length == 0){
+        //No active rooms
+        topRoomsTable.append("<div class = 'no_active_rooms'>None</div>")
+    }
     //mongodb-native doesn't have a sort function after a
     // group query. So we have to sort client side.
     data.sort(function(a,b){ return b.sum - a.sum});
