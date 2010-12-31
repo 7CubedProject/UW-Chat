@@ -291,10 +291,10 @@ function updateActiveRooms (data) {
     
     // What about using Mustache templates instead?
     data.forEach(function(obj){
-        room = obj.room.length > 21 ? obj.room.substr(0, 15).toLowerCase() + "..." : obj.room.toLowerCase();
+        room = obj.room.length > 21 ? obj.room.substr(0, 20) + "..." : obj.room;
         
         content += '<div><div class = "room_name">' + room + '</div>' 
-                    + '<div class = "join_button_div"><a href = "#" class = "button join_button" data-action = "'+obj.room.toLowerCase()+'">Join</a></div></div>';
+                    + '<div class = "join_button_div"><a href = "#" class = "button join_button" data-action = "'+obj.room+'">Join</a></div></div>';
     });
     
     topRoomsTable.append(content);
