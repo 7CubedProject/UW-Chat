@@ -283,7 +283,8 @@ function updateActiveRooms (data) {
     
     if (data.length == 0){
         //No active rooms
-        topRoomsTable.append("<div class = 'no_active_rooms'>None</div>")
+        topRoomsTable.append("<div class = 'no_active_rooms'>None</div>");
+        return;
     }
     //mongodb-native doesn't have a sort function after a
     // group query. So we have to sort client side.
@@ -293,8 +294,12 @@ function updateActiveRooms (data) {
     data.forEach(function(obj){
         room = obj.room.length > 21 ? obj.room.substr(0, 20) + "..." : obj.room;
         
-        content += '<div><div class = "room_name">' + room + '</div>' 
-                    + '<div class = "join_button_div"><a href = "#" class = "button join_button" data-action = "'+obj.room+'">Join</a></div></div>';
+        content +=     '<div>'
+                    +    '<div class = "room_name">' + room + '</div>' 
+                    +    '<div class = "join_button_div">'
+                    +    '<a href = "#" class = "button join_button" data-action = "'+obj.room+'">Join</a>'
+                    +    '</div>'
+                    +  '</div>';
     });
     
     topRoomsTable.append(content);

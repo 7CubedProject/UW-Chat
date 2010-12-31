@@ -31,7 +31,7 @@ Storage.save = function(coll_name, data) {
  * query to get the number of messages in the last half hour in each
  * existing chat room.
  * @param {String} coll_name name of the collection in the database
- * @param {Object} data an object literal to insert into the database
+ * @param {Function} callback callback to send document back to
  */
 Storage.getActiveRooms = function(coll_name, callback){
     var client = new Db(DB_NAME, new Server(DB_ADDESS, DB_PORT));
@@ -42,7 +42,7 @@ Storage.getActiveRooms = function(coll_name, callback){
         client.collection(coll_name, function(err, collection) {
             collection.group(['room'], {type: 'msg', timestamp: {$gt : new Date().getTime() - SINCE[2]}}, {sum:0}, function(doc, prev){ prev.sum += 1}, function(err, docs) {
                 sys.puts('log message ' + JSON.stringify(docs) + '.');
-                callback(docs);
+                if(typeof callback == "function") callback(docs);
                 client.close();
             });
         });
