@@ -130,7 +130,7 @@ a:hover { text-decoration: underline; color: #aaa; }
   text-align: center;
   width: 600px;
   margin: 0 auto;
-  margin-top: 200px;
+  margin-top: 50px;
   z-index: 3;
 }
 
@@ -172,4 +172,72 @@ a:hover { text-decoration: underline; color: #aaa; }
   color: Grey;
   font-size:0.8em;
   text-align:center;
+}
+
+/*
+	BUTTONS
+*/
+.button{
+    -moz-border-radius: 3px;
+    -webkit-border-radius: 3px;
+    background: url("/images/button-grey.gif") repeat-x scroll left top #D8D8D8;
+    border-color: #BBBBBB #BBBBBB #999999;
+    border-style: solid;
+    border-width: 1px;
+    color: #333333;
+    cursor: pointer;
+    display: inline;
+    font-size: 0.6em;
+    font-weight: bold;
+    padding: 3px 6px;
+    text-align: center;
+    text-shadow: 0 1px #F0F0F0;
+}
+
+.join_button{
+    background-color: #C3DD82;
+    background-image: url("/images/button-green.gif");
+    border-bottom: 1px solid #648517;
+    border-color: #8CB332 #8CB332 #648517;
+    color: #406A24;
+    text-shadow: 0 1px #D4ED95;
+}
+
+.join_button:hover{
+    border-color: #BBBBBB #BBBBBB #999999;
+    color: #406A24;
+}
+
+
+#activerooms_splash{
+  text-align: center;
+  width: 250px;
+  margin: 0 auto;
+  margin-top: 75px;
+  z-index: 3;
+}
+
+#activerooms_splash > div{
+	clear: both;
+}
+
+#activerooms_splash h2{
+	font-size: 0.8em;
+	font-weight: normal;
+    text-decoration: underline;
+	margin-bottom: 10px;
+}
+
+#activerooms_splash .no_active_rooms{
+	color: grey;
+    font-size: 0.7em;
+}
+
+#activerooms_splash .room_name{
+	float: left;
+	font-size: 0.8em;
+}
+
+#activerooms_splash .join_button_div {
+	float: right;
 }

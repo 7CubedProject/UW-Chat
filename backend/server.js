@@ -15,7 +15,8 @@ var fu = require("./fu"),
     ch = require("./Channel"),
     sys = require("sys"),
     url = require("url"),
-    qs = require("querystring");
+    qs = require("querystring"),
+    storage = require('./Storage.js');
 
 var SESSION_TIMEOUT = 60 * 1000;
 
@@ -440,5 +441,14 @@ fu.get("/send", function (req, res) {
 
   room.channel.appendMessage(session.nick, "msg", text);
   res.simpleJSON(200, { rss: mem.rss });
+});
+
+fu.get("/activerooms", function (req, res) {
+  sys.puts('serv: activerooms');
+  
+  storage.getActiveRooms('messages', function(data){
+    res.simpleJSON(200, data);
+  });
+  
 });
 

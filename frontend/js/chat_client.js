@@ -276,6 +276,43 @@ function updateUptime () {
   }
 }
 
+function updateActiveRooms (data) {
+    var topRoomsTable = $("#activerooms_splash"),
+        room,
+        content = '';
+    
+    if (data.length == 0){
+        //No active rooms
+        topRoomsTable.append("<div class = 'no_active_rooms'>None</div>");
+        return;
+    }
+    //mongodb-native doesn't have a sort function after a
+    // group query. So we have to sort client side.
+    data.sort(function(a,b){ return b.sum - a.sum});
+    
+    // What about using Mustache templates instead?
+    data.forEach(function(obj){
+        room = obj.room.length > 21 ? obj.room.substr(0, 20) + "..." : obj.room;
+        
+        content +=     '<div>'
+                    +    '<div class = "room_name">' + room + '</div>' 
+                    +    '<div class = "join_button_div">'
+                    +    '<a href = "#" class = "button join_button" data-action = "'+obj.room+'">Join</a>'
+                    +    '</div>'
+                    +  '</div>';
+    });
+    
+    topRoomsTable.append(content);
+    
+    $("#activerooms_splash .join_button").click(function(e){
+        //Should probably abstract this out later.
+        var roomName = $(this).attr("data-action");
+        $("#nickInput").attr("value", roomName);
+        $("#connectButton").click();
+    });
+           
+}
+
 var transmission_errors = 0;
 var first_poll = true;
 
@@ -420,8 +457,15 @@ function showChat (nick) {
 
   $("#loading").hide();
   $("#example").hide();
+  $("#activerooms_splash").hide();
 
   scrollDown();
+}
+
+function showActiveRooms () {
+    jQuery.get("/activerooms", {}, function (data) {
+        updateActiveRooms(eval("(" + data + ")"));
+    });
 }
 
 //we want to show a count of unread messages when the window does not have focus
@@ -590,6 +634,7 @@ $(document).ready(function() {
   $("#log table").remove();
 
   showConnect();
+  showActiveRooms();
 });
 
 //if we can, notify the server that we're going away.
